@@ -522,12 +522,10 @@ footer{
     <h2 class="section-title">Be first.<br><em>Join the waitlist.</em></h2>
     <p class="section-body" style="margin:0 auto 40px;">We're launching in Australia in 2026. Get early access, founding member pricing, and a say in what gets built.</p>
     <div id="cta-waitlist-area">
-      <form name="waitlist-cta" method="POST" action="valuna-thankyou.html" netlify netlify-honeypot="bot-field" class="waitlist-form" style="justify-content:center;" id="cta-form">
-        <input type="hidden" name="form-name" value="waitlist-cta">
-        <input type="text" name="bot-field" style="display:none;">
-        <input type="email" name="email" class="waitlist-input" id="cta-email" placeholder="your@email.com" autocomplete="email" required>
-        <button type="submit" class="waitlist-btn">Get Early Access</button>
-      </form>
+    <form action="/api/waitlist" method="POST" class="waitlist-form" id="waitlist-form">
+  <input type="email" name="email" class="waitlist-input" id="email-input" placeholder="your@email.com" autocomplete="email" required>
+  <button type="submit" class="waitlist-btn">Join Waitlist</button>
+</form>
       <p class="form-note" style="margin-top:12px;">Early access. No spam. Unsubscribe any time. By joining you agree to our <a href="valuna-privacy.html" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>.</p>
     </div>
   </div>
