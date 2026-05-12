@@ -879,6 +879,107 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
   }
 }
 
+
+/* ─────────────────────────────────────────────
+   VALUNA MOBILE ROOM CARD PROFESSIONAL FIX
+   Fixes mobile product room layout so icon/title/copy align correctly.
+   CSS only. Does not touch search, gates, Supabase, Resend, or JS.
+───────────────────────────────────────────── */
+@media(max-width:768px){
+
+  .rooms{
+    width:100%;
+    max-width:420px !important;
+    margin-left:auto;
+    margin-right:auto;
+    gap:14px !important;
+  }
+
+  .room{
+    display:grid !important;
+    grid-template-columns:48px minmax(0,1fr) !important;
+    grid-template-rows:auto auto auto;
+    column-gap:16px !important;
+    row-gap:4px;
+    align-items:center !important;
+    text-align:left !important;
+    padding:20px 18px !important;
+    min-height:auto !important;
+    border-radius:18px !important;
+  }
+
+  .room-icon{
+    grid-column:1;
+    grid-row:1 / span 2;
+    width:48px !important;
+    height:48px !important;
+    margin:0 !important;
+    align-self:start;
+  }
+
+  .room-name{
+    grid-column:2;
+    grid-row:1;
+    font-size:24px !important;
+    line-height:1.05 !important;
+    margin:0 0 4px !important;
+    white-space:normal;
+  }
+
+  .room-desc{
+    grid-column:2;
+    grid-row:2;
+    font-size:14.5px !important;
+    line-height:1.45 !important;
+    color:#c8c2ae;
+    margin:0 !important;
+    max-width:100%;
+  }
+
+  .room-soon{
+    grid-column:2;
+    grid-row:3;
+    justify-self:start;
+    margin-top:8px !important;
+    font-size:11px !important;
+  }
+
+  .room::before{
+    pointer-events:none;
+  }
+
+  .room-label{
+    margin-top:4px;
+    margin-bottom:18px !important;
+  }
+}
+
+@media(max-width:420px){
+  .rooms{
+    max-width:350px !important;
+  }
+
+  .room{
+    grid-template-columns:44px minmax(0,1fr) !important;
+    column-gap:14px !important;
+    padding:18px 16px !important;
+  }
+
+  .room-icon{
+    width:44px !important;
+    height:44px !important;
+  }
+
+  .room-name{
+    font-size:22px !important;
+  }
+
+  .room-desc{
+    font-size:14px !important;
+    line-height:1.45 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2244,4 +2345,6 @@ document.addEventListener('keydown', function(e) {
 <!-- Build: index-52_MOBILE_POLISH -->
 
 <!-- Build: index-53_SUCCESS_MESSAGE_JUNK_MAIL_NOTE -->
+
+<!-- Build: index-54_MOBILE_ROOM_CARD_FIX -->
 </html>
