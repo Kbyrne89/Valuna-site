@@ -1243,7 +1243,7 @@ function claimSpot(){
     p_email:email,
     p_source:'index_private_beta',
     p_requested_founder_status:true,
-    p_beta_access_starts_at:'2026-05-31',
+    p_access_starts_at:'2026-05-31',
     p_founder_fee_rate:0.01,
     p_standard_fee_rate_reference:0.023
   };
@@ -1271,7 +1271,26 @@ function claimSpot(){
       input.placeholder='Request received — use this email when creating your account';
     }
     var reviewNumber=row && row.founder_number ? ' Review #'+String(row.founder_number).padStart(3,'0')+'.' : '';
-    setFoundingStatus('ok','Access request received.'+reviewNumber+' Registered early access begins from 31/05/2026. If approved, founding status will be linked to this email.');
+    setFoundingStatus('ok','Access request received.'+reviewNumber+' Registered early access begins from 31/05/2026. If approved, founding status will be linked to this email. A confirmation email is being sent now.');
+
+    // Send confirmation email through Supabase Edge Function + Resend.
+    // If email sending fails, the beta request still remains safely saved in Supabase.
+    try{
+      fetch(VALUNA_SUPABASE_URL+'/functions/v1/send-beta-confirmation',{
+        method:'POST',
+        headers:{
+          'apikey':VALUNA_SUPABASE_ANON_KEY,
+          'Authorization':'Bearer '+VALUNA_SUPABASE_ANON_KEY,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          email:email,
+          founder_number:row && row.founder_number ? row.founder_number : null,
+          spots_remaining:row && row.spots_remaining!=null ? row.spots_remaining : null,
+          is_founder_eligible:!!(row && row.is_founder_eligible)
+        })
+      }).catch(function(){});
+    }catch(e){}
   })
   .catch(function(){
     setFoundingStatus('err','Your request could not be saved. Please try again, or email hello@valuna.app so we can add you manually.');
@@ -1724,4 +1743,6 @@ document.addEventListener('keydown', function(e) {
 </body>
 
 <!-- Build: index-50_SUPABASE_CONNECTED_BETA_ACCESS | Supabase beta access connected -->
+
+<!-- Build: index-51_RESEND_BETA_CONFIRMATION_READY -->
 </html>
