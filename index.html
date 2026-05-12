@@ -384,6 +384,501 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
 
 .cmd-acq-btn{padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid #1a1230;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;color:#6b6b6b;cursor:pointer;transition:all 0.15s;}
 .cmd-acq-btn.active{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.35);color:#c9a84c;}
+
+/* ─────────────────────────────────────────────
+   VALUNA MOBILE POLISH PATCH
+   Scope: mobile/tablet visual polish only.
+   Does not alter Supabase, Resend, search logic, gates, forms, or JS.
+───────────────────────────────────────────── */
+
+@media(max-width:768px){
+
+  html, body{
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  body{
+    font-size:16px;
+    line-height:1.65;
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;
+  }
+
+  .nav-inner,
+  .nav-inner.scrolled{
+    padding:12px 14px;
+    gap:10px;
+  }
+
+  .nav-logo{
+    height:24px;
+    max-width:126px;
+    object-fit:contain;
+  }
+
+  .nav-right{
+    gap:8px;
+  }
+
+  .nav-cta{
+    padding:8px 13px;
+    font-size:13px;
+    letter-spacing:0.07em;
+    border-radius:8px;
+  }
+
+  .nav-link{
+    display:none !important;
+  }
+
+  /* HERO */
+  .hero{
+    min-height:auto;
+    padding:108px 18px 46px;
+    justify-content:flex-start;
+  }
+
+  .hero-logo{
+    height:46px;
+    margin-bottom:20px;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.08em;
+    padding:6px 12px;
+    margin-bottom:22px;
+    max-width:100%;
+    line-height:1.35;
+    justify-content:center;
+    text-align:center;
+  }
+
+  .hero h1{
+    font-size:clamp(42px, 13vw, 58px);
+    line-height:0.98;
+    margin-bottom:18px;
+  }
+
+  .hero-sub{
+    font-size:15.5px;
+    line-height:1.7;
+    max-width:340px;
+    margin-bottom:28px;
+  }
+
+  /* SEARCH */
+  .hero-search-wrap{
+    margin:22px auto 26px;
+    max-width:100%;
+  }
+
+  .hero-search-tabs{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding:0 2px 8px;
+    margin-bottom:8px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .hero-search-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  .hero-tab{
+    flex:0 0 auto;
+    font-size:12px;
+    padding:7px 14px;
+  }
+
+  .hero-search-box{
+    padding:12px 14px;
+    border-radius:12px;
+  }
+
+  .hero-search-box input{
+    font-size:15px;
+  }
+
+  .search-drop{
+    max-height:70vh;
+    border-radius:12px;
+  }
+
+  .hero-results-card{
+    padding:11px 12px;
+  }
+
+  .hrc-name{
+    font-size:14px;
+  }
+
+  .hrc-set{
+    font-size:12px;
+  }
+
+  .hrc-price{
+    font-size:16px;
+  }
+
+  /* ROOMS / PRODUCT AREAS */
+  .room-label{
+    font-size:12px;
+    letter-spacing:0.13em;
+    margin-bottom:14px;
+  }
+
+  .rooms{
+    grid-template-columns:1fr !important;
+    gap:10px;
+    margin-bottom:32px;
+  }
+
+  .room{
+    padding:18px 16px;
+    display:grid;
+    grid-template-columns:44px 1fr;
+    column-gap:14px;
+    text-align:left;
+    align-items:center;
+  }
+
+  .room-icon{
+    margin:0;
+  }
+
+  .room-name{
+    font-size:20px;
+    margin-bottom:2px;
+  }
+
+  .room-desc{
+    font-size:13.5px;
+    line-height:1.5;
+  }
+
+  .room-soon{
+    font-size:11px;
+  }
+
+  /* TICKER */
+  .ticker-section{
+    margin-top:34px;
+  }
+
+  .ticker-wrap{
+    padding:9px 0;
+  }
+
+  .tick-item{
+    font-size:12px;
+  }
+
+  /* SECTIONS */
+  .section,
+  .hiw-bg{
+    padding:44px 18px;
+  }
+
+  .section-label{
+    font-size:12px;
+    letter-spacing:0.13em;
+    margin-bottom:10px;
+  }
+
+  .section-title{
+    font-size:clamp(30px, 9vw, 40px);
+    line-height:1.06;
+  }
+
+  .section-sub{
+    font-size:15px;
+    line-height:1.7;
+    max-width:100%;
+  }
+
+  /* PRIVATE BETA / FOUNDING PANEL */
+  .founding-strip{
+    max-width:100%;
+    padding:22px 14px 18px;
+    border-radius:16px;
+    margin-top:22px;
+  }
+
+  .founding-label{
+    font-size:12px;
+    letter-spacing:0.12em;
+    margin-bottom:12px;
+  }
+
+  .founding-count{
+    font-size:48px;
+  }
+
+  .founding-count-lbl{
+    font-size:12px;
+    line-height:1.35;
+    margin-bottom:14px;
+  }
+
+  .founding-perks{
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .perk{
+    min-width:0;
+    width:100%;
+    padding:11px 12px;
+  }
+
+  .perk-title{
+    font-size:13px;
+  }
+
+  .perk-sub{
+    font-size:12.5px;
+    line-height:1.45;
+  }
+
+  .founding-comparison{
+    grid-template-columns:1fr !important;
+    gap:10px;
+  }
+
+  .fc-card{
+    padding:18px 16px;
+  }
+
+  .fc-fee{
+    font-size:44px;
+  }
+
+  .fc-fee-label,
+  .fc-perk,
+  .fc-math{
+    font-size:12.5px;
+  }
+
+  .founding-form{
+    flex-direction:column;
+    border-radius:13px;
+  }
+
+  .founding-form input{
+    width:100%;
+    padding:15px 16px;
+    text-align:left;
+    font-size:15px;
+  }
+
+  .founding-form button{
+    width:100%;
+    padding:15px 16px;
+    font-size:15px;
+    border-top:1px solid rgba(6,8,15,0.25);
+  }
+
+  .founding-note{
+    font-size:13px;
+    line-height:1.6;
+    padding:0 4px;
+  }
+
+  /* ACCESS STATUS / SUCCESS BOXES */
+  .founding-status,
+  .access-status,
+  [id*="status"],
+  [class*="status"]{
+    max-width:100%;
+  }
+
+  /* TABLES / COMPARISONS */
+  .compare-table{
+    min-width:0;
+    width:100%;
+  }
+
+  .compare-feature-col{
+    width:auto;
+  }
+
+  .compare-platform{
+    padding:10px 4px;
+  }
+
+  .compare-logo-pill{
+    font-size:11px;
+    padding:4px 9px;
+  }
+
+  .compare-platform-name{
+    font-size:11px;
+  }
+
+  .compare-feature{
+    font-size:12px;
+    line-height:1.35;
+    padding:12px 4px 12px 0;
+  }
+
+  .compare-val{
+    font-size:12px;
+    padding:12px 4px;
+  }
+
+  .cyes,
+  .cno,
+  .cmid{
+    font-size:11px;
+    line-height:1.3;
+  }
+
+  /* HOW IT WORKS */
+  .steps{
+    grid-template-columns:1fr !important;
+    gap:10px;
+    margin-top:28px;
+  }
+
+  .step,
+  .step:first-child,
+  .step:nth-child(2),
+  .step:nth-child(3),
+  .step:last-child{
+    border-radius:14px;
+    padding:24px 18px;
+  }
+
+  .step-num{
+    font-size:38px;
+  }
+
+  .step-title{
+    font-size:16px;
+  }
+
+  .step-body{
+    font-size:14px;
+    line-height:1.65;
+  }
+
+  /* CARD MODAL */
+  .card-modal-overlay{
+    align-items:flex-end;
+    padding:10px;
+  }
+
+  .card-modal-box{
+    max-height:92vh;
+    border-radius:16px;
+  }
+
+  .card-modal-inner{
+    grid-template-columns:1fr !important;
+    padding:24px 18px;
+    gap:18px;
+    text-align:center;
+  }
+
+  .card-modal-img,
+  .card-modal-img-ph{
+    width:150px;
+    height:210px;
+    margin:0 auto;
+  }
+
+  .card-modal-name{
+    font-size:24px;
+  }
+
+  .card-modal-set{
+    font-size:13px;
+  }
+
+  .card-modal-prices{
+    grid-template-columns:1fr;
+  }
+
+  .card-modal-disclaimer{
+    font-size:12px;
+  }
+
+  .card-modal-track-row{
+    grid-template-columns:1fr;
+  }
+
+  /* FOOTER */
+  footer{
+    padding:32px 18px;
+    gap:18px;
+  }
+
+  .footer-logo{
+    height:22px;
+  }
+
+  .footer-links{
+    gap:14px 18px;
+  }
+
+  .footer-links a{
+    font-size:11px;
+  }
+
+  .footer-copy{
+    font-size:12px;
+    line-height:1.5;
+  }
+}
+
+@media(max-width:420px){
+  .hero{
+    padding-top:100px;
+  }
+
+  .hero-logo{
+    height:40px;
+  }
+
+  .hero h1{
+    font-size:44px;
+  }
+
+  .hero-sub{
+    font-size:14.5px;
+  }
+
+  .nav-cta{
+    font-size:12px;
+    padding:8px 10px;
+  }
+
+  .room{
+    grid-template-columns:40px 1fr;
+    padding:16px 14px;
+  }
+
+  .room-icon{
+    width:40px;
+    height:40px;
+  }
+
+  .founding-count{
+    font-size:44px;
+  }
+
+  .fc-fee{
+    font-size:40px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1745,4 +2240,6 @@ document.addEventListener('keydown', function(e) {
 <!-- Build: index-50_SUPABASE_CONNECTED_BETA_ACCESS | Supabase beta access connected -->
 
 <!-- Build: index-51_RESEND_BETA_CONFIRMATION_READY -->
+
+<!-- Build: index-52_MOBILE_POLISH -->
 </html>
