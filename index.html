@@ -1766,7 +1766,7 @@ function claimSpot(){
       input.placeholder='Request received — use this email when creating your account';
     }
     var reviewNumber=row && row.founder_number ? ' Review #'+String(row.founder_number).padStart(3,'0')+'.' : '';
-    setFoundingStatus('ok','Access request received.'+reviewNumber+' Registered early access begins from 31/05/2026. If approved, founding status will be linked to this email. A confirmation email is being sent now.');
+    setFoundingStatus('ok','Access request received.'+reviewNumber+' Registered early access begins from 31/05/2026. If approved, founding status will be linked to this email. A confirmation email is being sent now. Please check your junk or spam folder if it does not appear in your inbox.');
 
     // Send confirmation email through Supabase Edge Function + Resend.
     // If email sending fails, the beta request still remains safely saved in Supabase.
@@ -2242,4 +2242,6 @@ document.addEventListener('keydown', function(e) {
 <!-- Build: index-51_RESEND_BETA_CONFIRMATION_READY -->
 
 <!-- Build: index-52_MOBILE_POLISH -->
+
+<!-- Build: index-53_SUCCESS_MESSAGE_JUNK_MAIL_NOTE -->
 </html>
