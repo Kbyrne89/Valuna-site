@@ -1456,6 +1456,63 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
 .admin-access-status.err{display:block;background:rgba(224,82,82,.10);border:1px solid rgba(224,82,82,.28);color:#f0b3b3;}
 @media(max-width:768px){.admin-access-section{padding:22px 18px 34px;}.admin-access-top{display:block;}.admin-access-toggle{width:100%;margin-top:14px;}.admin-access-title{font-size:24px;}.admin-access-form{grid-template-columns:1fr;}.admin-access-form button{width:100%;}}
 
+
+/* ─────────────────────────────────────────────
+   VALUNA EMPLOYEE LOGIN COMPACT
+───────────────────────────────────────────── */
+.admin-access-section{
+  padding:14px 48px 34px !important;
+  text-align:center !important;
+}
+.employee-login-compact{
+  display:inline-block !important;
+  width:auto !important;
+  max-width:720px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+}
+.employee-login-button{
+  min-width:190px;
+  box-shadow:0 10px 32px rgba(201,168,76,0.10);
+}
+.employee-login-compact.open{
+  display:block !important;
+  width:100% !important;
+  max-width:760px !important;
+  margin:0 auto !important;
+  padding:18px !important;
+  background:rgba(10,8,16,0.84) !important;
+  border:1px solid rgba(201,168,76,0.18) !important;
+  border-radius:18px !important;
+}
+.employee-login-compact.open .employee-login-button{
+  margin-bottom:0;
+}
+.employee-login-compact .admin-access-panel{
+  text-align:left;
+}
+.employee-login-compact .admin-access-note,
+.employee-login-compact .admin-access-label,
+.employee-login-compact .admin-access-title,
+.employee-login-compact .admin-access-copy,
+.employee-login-compact .admin-access-summary,
+.employee-login-compact .admin-access-top{
+  display:none !important;
+}
+@media(max-width:768px){
+  .admin-access-section{
+    padding:14px 18px 30px !important;
+  }
+  .employee-login-button{
+    width:100%;
+  }
+  .employee-login-compact.open{
+    padding:16px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1885,25 +1942,19 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
 
 
 
-<!-- STAFF ADMIN ACCESS - INTERNAL VALUNA USE ONLY -->
+
+<!-- EMPLOYEE LOGIN - INTERNAL VALUNA USE ONLY -->
 <section class="admin-access-section" id="admin-access">
-  <div class="admin-access-card" id="admin-access-card">
-    <div class="admin-access-top">
-      <div class="admin-access-summary">
-        <div class="admin-access-label">Employee Login</div>
-        <h2 class="admin-access-title">Employee access</h2>
-        <p class="admin-access-copy">Restricted access for authorised Valuna employees.</p>
-      </div>
-      <button type="button" class="admin-access-toggle" id="admin-access-toggle">Employee Login</button>
-    </div>
+  <div class="admin-access-card employee-login-compact" id="admin-access-card">
+    <button type="button" class="admin-access-toggle employee-login-button" id="admin-access-toggle">Employee Login</button>
+
     <div class="admin-access-panel" id="admin-access-panel">
       <form class="admin-access-form" id="admin-access-form" autocomplete="off">
-        <input id="admin-access-email" type="email" inputmode="email" autocomplete="email" placeholder="staff@valuna.app" required>
+        <input id="admin-access-email" type="email" inputmode="email" autocomplete="email" placeholder="employee@valuna.app" required>
         <input id="admin-access-password" type="password" autocomplete="current-password" placeholder="Password" required>
         <button type="submit" id="admin-access-submit">Sign In</button>
         <button type="button" id="admin-password-setup">Create / Reset Password</button>
       </form>
-      <div class="admin-access-note">Authorised Valuna employee access only.</div>
       <div class="admin-access-status" id="admin-access-status" aria-live="polite"></div>
     </div>
   </div>
@@ -2883,7 +2934,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
   if(toggle && card){
     toggle.addEventListener('click',function(){
       card.classList.toggle('open');
-      toggle.textContent=card.classList.contains('open') ? 'Close' : 'Employee Login';
+      toggle.textContent=card.classList.contains('open') ? 'Close Employee Login' : 'Employee Login';
     });
   }
 
@@ -3012,4 +3063,6 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 <!-- Build: index-65_EMPLOYEE_LOGIN_LABEL -->
 
 <!-- Build: index-66_EMPLOYEE_LOGIN_COPY_SOFTEN -->
+
+<!-- Build: index-67_EMPLOYEE_LOGIN_BUTTON_ONLY -->
 </html>
