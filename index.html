@@ -1901,7 +1901,7 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
         <input id="admin-access-email" type="email" inputmode="email" autocomplete="email" placeholder="staff@valuna.app" required>
         <input id="admin-access-password" type="password" autocomplete="current-password" placeholder="Password" required>
         <button type="submit" id="admin-access-submit">Sign In</button>
-        <button type="button" id="admin-password-setup">Create Password</button>
+        <button type="button" id="admin-password-setup">Create / Reset Password</button>
       </form>
       <div class="admin-access-note">Staff backend access is restricted to approved Valuna emails only. New staff passwords can only be created for approved admin emails.</div>
       <div class="admin-access-status" id="admin-access-status" aria-live="polite"></div>
@@ -2902,7 +2902,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
       }
       var sb=getSupabaseClient();
       if(!sb){
-        setAdminAccessStatus('err','Admin login service is not currently available.');
+        setAdminAccessStatus('err','Staff login service is not currently available.');
         return;
       }
       if(submitBtn){ submitBtn.disabled=true; submitBtn.textContent='Signing In...'; }
@@ -2914,7 +2914,11 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
           window.location.href=getAdminRedirect();
         })
         .catch(function(err){
-          setAdminAccessStatus('err',err && err.message ? err.message : 'Admin sign in failed.');
+          var msg = err && err.message ? err.message : 'Admin sign in failed.';
+          if(String(msg).toLowerCase().indexOf('invalid login credentials') !== -1){
+            msg='Invalid email or password. If this is your first time signing in, use Create / Reset Password and check the staff inbox before trying again.';
+          }
+          setAdminAccessStatus('err',msg);
         })
         .finally(function(){
           if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Sign In'; }
@@ -2936,7 +2940,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
       }
       var sb=getSupabaseClient();
       if(!sb){
-        setAdminAccessStatus('err','Password setup service is not currently available.');
+        setAdminAccessStatus('err','Staff password setup service is not currently available.');
         return;
       }
       setupBtn.disabled=true; setupBtn.textContent='Creating...';
@@ -2947,15 +2951,28 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
         options:{ emailRedirectTo:getAdminRedirect() }
       })
       .then(function(result){
-        if(result.error) throw result.error;
-        setAdminAccessStatus('ok','Password/account setup started. Check the staff inbox if Supabase requires email confirmation, then sign in here.');
+        if(result.error){
+          var msg=String(result.error.message || '').toLowerCase();
+          if(msg.indexOf('already') !== -1 || msg.indexOf('registered') !== -1 || msg.indexOf('exists') !== -1){
+            return sb.auth.resetPasswordForEmail(email,{ redirectTo:getAdminRedirect() }).then(function(resetResult){
+              if(resetResult.error) throw resetResult.error;
+              setAdminAccessStatus('ok','A password reset/setup email has been sent to the staff inbox. Follow that email, then return here to sign in.');
+            });
+          }
+          throw result.error;
+        }
+        setAdminAccessStatus('ok','Password setup has started. Check the staff inbox for the confirmation or password setup email, then sign in here.');
       })
       .catch(function(err){
-        setAdminAccessStatus('err',err && err.message ? err.message : 'Password setup failed.');
+        var msg = err && err.message ? err.message : 'Password setup failed.';
+        if(String(msg).toLowerCase().indexOf('invalid') !== -1){
+          msg='Password setup could not be completed. Check the staff inbox for the setup email, or try Create / Reset Password again.';
+        }
+        setAdminAccessStatus('err',msg);
       })
       .finally(function(){
         setupBtn.disabled=false;
-        setupBtn.textContent='Create Password';
+        setupBtn.textContent='Create / Reset Password';
       });
     });
   }
@@ -2989,4 +3006,6 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 <!-- Build: index-62_STAFF_ADMIN_SUPABASE_GLOBAL_FIX -->
 
 <!-- Build: index-63_STAFF_ADMIN_SUPABASE_CDN_FIX -->
+
+<!-- Build: index-64_STAFF_ADMIN_PASSWORD_COPY_RESET_FIX -->
 </html>
