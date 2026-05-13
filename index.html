@@ -1238,6 +1238,200 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
   }
 }
 
+
+/* ─────────────────────────────────────────────
+   VALUNA ADMIN ACCESS BUTTON FLOW
+   Button > request/login panel > email request > manual approval.
+   Internal Valuna-only access path. Does not grant access automatically.
+───────────────────────────────────────────── */
+.admin-access-section{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:22px 48px 42px;
+  position:relative;
+  z-index:5;
+}
+.admin-access-card{
+  background:rgba(10,8,16,0.84);
+  border:1px solid rgba(201,168,76,0.18);
+  border-radius:18px;
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.admin-access-card.open{
+  display:block;
+}
+.admin-access-summary{
+  min-width:0;
+}
+.admin-access-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-bottom:5px;
+}
+.admin-access-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;
+  font-size:26px;
+  line-height:1.08;
+  color:#f2ecd8;
+  margin:0;
+}
+.admin-access-copy{
+  font-size:13px;
+  color:#a8a2b8;
+  line-height:1.55;
+  margin:6px 0 0;
+}
+.admin-access-toggle,
+.admin-access-form button,
+.admin-access-login{
+  background:linear-gradient(135deg,#a87830,#e8c96a,#c9a84c,#8a6020);
+  border:none;
+  border-radius:10px;
+  padding:12px 18px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:#06080f;
+  cursor:pointer;
+  white-space:nowrap;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.admin-access-panel{
+  display:none;
+  margin-top:18px;
+  border-top:1px solid rgba(201,168,76,0.12);
+  padding-top:18px;
+}
+.admin-access-card.open .admin-access-panel{
+  display:block;
+}
+.admin-access-options{
+  display:grid;
+  grid-template-columns:1.2fr 0.8fr;
+  gap:14px;
+}
+.admin-access-option{
+  background:#0f0a1a;
+  border:1px solid rgba(201,168,76,0.16);
+  border-radius:14px;
+  padding:16px;
+}
+.admin-access-option-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:13px;
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-bottom:8px;
+}
+.admin-access-option p{
+  font-size:13px;
+  line-height:1.55;
+  color:#a8a2b8;
+  margin:0 0 12px;
+}
+.admin-access-form{
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+.admin-access-form input,
+.admin-access-login-email{
+  width:100%;
+  background:#070611;
+  border:1px solid rgba(201,168,76,0.26);
+  border-radius:10px;
+  padding:12px 14px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:#f2ecd8;
+  outline:none;
+}
+.admin-access-form input:focus,
+.admin-access-login-email:focus{
+  border-color:#c9a84c;
+}
+.admin-access-login-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.admin-access-login{
+  width:100%;
+}
+.admin-access-note{
+  font-size:12px;
+  color:#6b6b6b;
+  line-height:1.55;
+  margin-top:12px;
+}
+.admin-access-status{
+  display:none;
+  margin-top:12px;
+  padding:12px 13px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.55;
+}
+.admin-access-status.ok{
+  display:block;
+  background:rgba(42,157,106,0.10);
+  border:1px solid rgba(42,157,106,0.28);
+  color:#b9f4d4;
+}
+.admin-access-status.err{
+  display:block;
+  background:rgba(224,82,82,0.10);
+  border:1px solid rgba(224,82,82,0.28);
+  color:#f0b3b3;
+}
+@media(max-width:768px){
+  .admin-access-section{
+    padding:22px 18px 34px;
+  }
+  .admin-access-card{
+    display:block;
+    padding:17px;
+    border-radius:16px;
+  }
+  .admin-access-toggle{
+    width:100%;
+    margin-top:14px;
+  }
+  .admin-access-title{
+    font-size:24px;
+  }
+  .admin-access-options{
+    grid-template-columns:1fr;
+  }
+  .admin-access-form{
+    grid-template-columns:1fr;
+  }
+  .admin-access-form button{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1665,29 +1859,60 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
 <!-- FOOTER -->
 
 
+
 <!-- ADMIN ACCESS REQUEST - INTERNAL VALUNA USE ONLY -->
 <section class="admin-access-section" id="admin-access">
-  <div class="admin-access-card">
-    <div class="admin-access-label">Admin Access</div>
-    <h2 class="admin-access-title">Internal access request</h2>
-    <p class="admin-access-copy">
-      This access pathway is for authorised Valuna team use only. Submit a Valuna email to request backend access approval.
-    </p>
-    <form class="admin-access-form" id="admin-access-form" autocomplete="off">
-      <input
-        id="admin-access-email"
-        type="email"
-        inputmode="email"
-        autocomplete="off"
-        placeholder="name@valuna.app"
-        required
-      >
-      <button type="submit" id="admin-access-submit">Request Admin Access</button>
-    </form>
-    <div class="admin-access-note">
-      Access is not granted automatically. All requests are reviewed manually before admin/backend access is enabled.
+  <div class="admin-access-card" id="admin-access-card">
+    <div class="admin-access-summary">
+      <div class="admin-access-label">Admin Access</div>
+      <h2 class="admin-access-title">Internal access</h2>
+      <p class="admin-access-copy">
+        Authorised Valuna team access only. Request approval or sign in after manual approval.
+      </p>
     </div>
-    <div class="admin-access-status" id="admin-access-status" aria-live="polite"></div>
+    <button type="button" class="admin-access-toggle" id="admin-access-toggle">Admin Access</button>
+
+    <div class="admin-access-panel" id="admin-access-panel">
+      <div class="admin-access-options">
+        <div class="admin-access-option">
+          <div class="admin-access-option-title">Request access</div>
+          <p>Enter your Valuna email to send an approval request. Access is not granted until manually approved.</p>
+          <form class="admin-access-form" id="admin-access-form" autocomplete="off">
+            <input
+              id="admin-access-email"
+              type="email"
+              inputmode="email"
+              autocomplete="off"
+              placeholder="name@valuna.app"
+              required
+            >
+            <button type="submit" id="admin-access-submit">Send Request</button>
+          </form>
+          <div class="admin-access-status" id="admin-access-status" aria-live="polite"></div>
+        </div>
+
+        <div class="admin-access-option">
+          <div class="admin-access-option-title">Already approved?</div>
+          <p>Approved Valuna team members can continue to sign in. New approved users will be prompted to create and save a password.</p>
+          <div class="admin-access-login-row">
+            <input
+              class="admin-access-login-email"
+              id="admin-access-login-email"
+              type="email"
+              inputmode="email"
+              autocomplete="off"
+              placeholder="name@valuna.app"
+            >
+            <button type="button" class="admin-access-login" id="admin-access-login">Sign In</button>
+          </div>
+          <div class="admin-access-status" id="admin-login-status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="admin-access-note">
+        This button does not bypass private beta gates. Admin/backend access requires manual approval and platform-side permission.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2621,82 +2846,106 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 
+
 <script>
 (function(){
+  var card=document.getElementById('admin-access-card');
+  var toggle=document.getElementById('admin-access-toggle');
   var form=document.getElementById('admin-access-form');
   var emailInput=document.getElementById('admin-access-email');
   var statusBox=document.getElementById('admin-access-status');
   var submitBtn=document.getElementById('admin-access-submit');
+  var loginEmail=document.getElementById('admin-access-login-email');
+  var loginBtn=document.getElementById('admin-access-login');
+  var loginStatus=document.getElementById('admin-login-status');
 
-  function setAdminAccessStatus(type,msg){
-    if(!statusBox) return;
-    statusBox.className='admin-access-status '+(type==='ok'?'ok':'err');
-    statusBox.textContent=msg;
+  function setBox(box,type,msg){
+    if(!box) return;
+    box.className='admin-access-status '+(type==='ok'?'ok':'err');
+    box.textContent=msg;
   }
 
-  if(!form) return;
+  function validValunaEmail(email){
+    return /^[^\s@]+@valuna\.app$/i.test(String(email || '').trim());
+  }
 
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-
-    var email=(emailInput && emailInput.value ? emailInput.value.trim().toLowerCase() : '');
-
-    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-      setAdminAccessStatus('err','Please enter a valid Valuna email address.');
-      return;
-    }
-
-    if(!email.endsWith('@valuna.app')){
-      setAdminAccessStatus('err','Admin access requests are restricted to Valuna email addresses.');
-      return;
-    }
-
-    if(!window.VALUNA_SUPABASE_URL || !window.VALUNA_SUPABASE_ANON_KEY){
-      setAdminAccessStatus('err','Admin access request service is not currently available.');
-      return;
-    }
-
-    if(submitBtn){
-      submitBtn.disabled=true;
-      submitBtn.textContent='Sending...';
-    }
-
-    fetch(window.VALUNA_SUPABASE_URL+'/functions/v1/send-admin-access-request',{
-      method:'POST',
-      headers:{
-        'apikey':window.VALUNA_SUPABASE_ANON_KEY,
-        'Authorization':'Bearer '+window.VALUNA_SUPABASE_ANON_KEY,
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        email:email,
-        note:'Admin/backend access approval requested from the public index access section.',
-        requested_from:'https://valuna.app/',
-        user_agent:navigator.userAgent || ''
-      })
-    })
-    .then(function(res){
-      return res.json().catch(function(){return {};}).then(function(data){
-        if(!res.ok || data.success===false){
-          throw new Error(data.error || 'Admin access request failed.');
-        }
-        return data;
-      });
-    })
-    .then(function(){
-      setAdminAccessStatus('ok','Approval request has been sent to the correct Valuna team member for access. Access is not granted until manually approved.');
-      form.reset();
-    })
-    .catch(function(err){
-      setAdminAccessStatus('err',err && err.message ? err.message : 'Admin access request could not be sent.');
-    })
-    .finally(function(){
-      if(submitBtn){
-        submitBtn.disabled=false;
-        submitBtn.textContent='Request Admin Access';
-      }
+  if(toggle && card){
+    toggle.addEventListener('click',function(){
+      card.classList.toggle('open');
+      toggle.textContent=card.classList.contains('open') ? 'Close' : 'Admin Access';
     });
-  });
+  }
+
+  if(form){
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+
+      var email=(emailInput && emailInput.value ? emailInput.value.trim().toLowerCase() : '');
+
+      if(!validValunaEmail(email)){
+        setBox(statusBox,'err','Admin access requests are restricted to Valuna email addresses.');
+        return;
+      }
+
+      if(!window.VALUNA_SUPABASE_URL || !window.VALUNA_SUPABASE_ANON_KEY){
+        setBox(statusBox,'err','Admin access request service is not currently available.');
+        return;
+      }
+
+      if(submitBtn){
+        submitBtn.disabled=true;
+        submitBtn.textContent='Sending...';
+      }
+
+      fetch(window.VALUNA_SUPABASE_URL+'/functions/v1/send-admin-access-request',{
+        method:'POST',
+        headers:{
+          'apikey':window.VALUNA_SUPABASE_ANON_KEY,
+          'Authorization':'Bearer '+window.VALUNA_SUPABASE_ANON_KEY,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          email:email,
+          note:'Admin/backend access approval requested from the public index access section.',
+          requested_from:'https://valuna.app/',
+          user_agent:navigator.userAgent || ''
+        })
+      })
+      .then(function(res){
+        return res.json().catch(function(){return {};}).then(function(data){
+          if(!res.ok || data.success===false){
+            throw new Error(data.error || 'Admin access request failed.');
+          }
+          return data;
+        });
+      })
+      .then(function(){
+        setBox(statusBox,'ok','Approval request has been sent to the correct Valuna team member for access. Access is not granted until manually approved.');
+        form.reset();
+      })
+      .catch(function(err){
+        setBox(statusBox,'err',err && err.message ? err.message : 'Admin access request could not be sent.');
+      })
+      .finally(function(){
+        if(submitBtn){
+          submitBtn.disabled=false;
+          submitBtn.textContent='Send Request';
+        }
+      });
+    });
+  }
+
+  if(loginBtn){
+    loginBtn.addEventListener('click',function(){
+      var email=(loginEmail && loginEmail.value ? loginEmail.value.trim().toLowerCase() : '');
+      if(!validValunaEmail(email)){
+        setBox(loginStatus,'err','Use an approved Valuna email address to sign in.');
+        return;
+      }
+      // Approved access is enforced by the platform-side admin/beta gate.
+      window.location.href='https://platform.valuna.app/marketplace.html?auth=login&admin=1';
+    });
+  }
 })();
 </script>
 
@@ -2719,4 +2968,6 @@ document.addEventListener('keydown', function(e) {
 <!-- Build: index-58_ADMIN_ACCESS_RESTORED_NO_NAMES -->
 
 <!-- Build: index-59_ADMIN_ACCESS_VISIBLE_BOTTOM_FIX -->
+
+<!-- Build: index-60_ADMIN_BUTTON_REQUEST_LOGIN_FLOW -->
 </html>
