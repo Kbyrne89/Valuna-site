@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valuna Admin — Backend Control</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:#06080f;scroll-behavior:smooth;}
+body{background:#06080f;color:#f2ecd8;font-family:'DM Sans',sans-serif;line-height:1.75;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur) ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:var(--a);transform:scale(1);}to{opacity:calc(var(--a)*0.18);transform:scale(.45);}}
+.app{position:relative;z-index:1;min-height:100vh;}
+nav{position:sticky;top:0;z-index:50;background:rgba(6,8,15,.94);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.14);display:flex;align-items:center;justify-content:space-between;padding:16px 34px;}
+.logo-word{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:.02em;color:#f2ecd8;}
+.logo-word span{color:#c9a84c;}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn{border:1px solid #1a1230;background:#0f0a1a;border-radius:10px;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#c8c2ae;cursor:pointer;text-decoration:none;transition:.18s;}
+.btn:hover{border-color:rgba(201,168,76,.35);color:#c9a84c;}
+.btn.gold{background:linear-gradient(135deg,#a87830,#e8c96a,#c9a84c,#8a6020);border:none;color:#06080f;}
+.btn.red{border-color:rgba(224,82,82,.25);color:#e05252;}
+.btn.green{border-color:rgba(42,157,106,.25);color:#2a9d6a;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.wrap{max-width:1280px;margin:0 auto;padding:34px;}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px;}
+.kicker{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;}
+h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;line-height:1.05;color:#f2ecd8;}
+.sub{color:#a8a2b8;font-size:15px;max-width:680px;margin-top:8px;}
+.auth-card,.denied-card{max-width:560px;margin:70px auto;background:#0a0810;border:1px solid rgba(201,168,76,.22);border-radius:20px;padding:32px;box-shadow:0 20px 80px rgba(0,0,0,.35);}
+.auth-title{font-family:'Cormorant Garamond',serif;font-size:34px;line-height:1.1;margin-bottom:8px;}
+.auth-sub{color:#a8a2b8;font-size:15px;line-height:1.65;margin-bottom:20px;}
+.form-grid{display:grid;gap:12px;}
+.input,.select,textarea{width:100%;background:#0f0a1a;border:1px solid #1a1230;border-radius:10px;padding:12px 14px;color:#f2ecd8;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;}
+.input:focus,.select:focus,textarea:focus{border-color:rgba(201,168,76,.45);}
+label{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:#6b6b6b;margin-bottom:5px;display:block;}
+.notice{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.55;}
+.notice.ok{display:block;background:rgba(42,157,106,.1);border:1px solid rgba(42,157,106,.25);color:#b9f4d4;}
+.notice.err{display:block;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.25);color:#f0b3b3;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0;}
+.stat{background:#0a0810;border:1px solid #1a1230;border-radius:16px;padding:18px;}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:34px;color:#c9a84c;line-height:1;}
+.stat-l{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9b96ae;margin-top:8px;}
+.tabs{display:flex;gap:0;border-bottom:1px solid #1a1230;margin:24px 0 18px;overflow-x:auto;}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:#6b6b6b;padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
+.tab.on{color:#c9a84c;border-bottom-color:#c9a84c;}
+.panel{display:none;}
+.panel.on{display:block;}
+.card{background:#0a0810;border:1px solid #1a1230;border-radius:16px;padding:18px;margin-bottom:12px;}
+.card-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:12px;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:#f2ecd8;line-height:1.15;}
+.meta{font-size:13px;color:#9b96ae;line-height:1.55;}
+.badge{display:inline-flex;padding:4px 9px;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(201,168,76,.22);color:#c9a84c;background:rgba(201,168,76,.08);}
+.badge.green{color:#2a9d6a;border-color:rgba(42,157,106,.25);background:rgba(42,157,106,.08);}
+.badge.red{color:#e05252;border-color:rgba(224,82,82,.25);background:rgba(224,82,82,.08);}
+.table-wrap{overflow-x:auto;border:1px solid #1a1230;border-radius:16px;background:#0a0810;}
+table{width:100%;border-collapse:collapse;min-width:820px;}
+th{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#6b6b6b;padding:12px;text-align:left;border-bottom:1px solid #1a1230;}
+td{padding:12px;border-bottom:1px solid rgba(26,18,48,.65);font-size:14px;color:#c8c2ae;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.status-select{min-width:190px;background:#0f0a1a;border:1px solid #1a1230;border-radius:9px;color:#f2ecd8;padding:8px 10px;font-size:13px;}
+.empty{text-align:center;padding:44px 18px;color:#6b6b6b;}
+.hidden{display:none!important;}
+.loading{display:flex;justify-content:center;align-items:center;padding:46px;}
+.spinner{width:28px;height:28px;border:2px solid #1a1230;border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.footer-note{color:#6b6b6b;font-size:12px;margin-top:24px;text-align:center;}
+@media(max-width:900px){
+  nav{padding:14px 18px;}
+  .wrap{padding:24px 18px;}
+  .hero{display:block;}
+  h1{font-size:36px;}
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .card-head{display:block;}
+  .nav-actions{gap:6px;}
+  .btn{padding:9px 12px;font-size:12px;}
+}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="app">
+<nav>
+  <div class="logo-word">Valuna <span>Admin</span></div>
+  <div class="nav-actions">
+    <a class="btn" href="index.html">Public Site</a>
+    <a class="btn" href="marketplace.html">Marketplace</a>
+    <button class="btn red hidden" id="signout-btn" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <section id="auth-view" class="auth-card">
+    <div class="kicker">Approved Valuna Access Only</div>
+    <div class="auth-title">Backend control panel</div>
+    <div class="auth-sub">
+      Staff backend access is restricted to approved Valuna emails only. Sign in with an approved staff email and password created from the Valuna landing page admin login panel.
+    </div>
+    <div class="form-grid">
+      <div>
+        <label>Email</label>
+        <input class="input" id="auth-email" type="email" inputmode="email" placeholder="name@valuna.app" autocomplete="email">
+      </div>
+      <div>
+        <label>Password</label>
+        <input class="input" id="auth-password" type="password" placeholder="Enter password" autocomplete="current-password">
+      </div>
+      <button class="btn gold" onclick="adminSignIn()">Sign In</button>
+      <div class="auth-sub" style="margin:2px 0 0;">Passwords are created from the staff admin login panel on the Valuna landing page. This backend page is for approved staff sign-in only.</div>
+      <div class="notice" id="auth-status"></div>
+    </div>
+  </section>
+
+  <section id="denied-view" class="denied-card hidden">
+    <div class="kicker">Access Not Approved</div>
+    <div class="auth-title">Manual approval required</div>
+    <div class="auth-sub">
+      This Valuna email is signed in, but it is not currently listed as an approved admin. Request access from the public Valuna homepage and wait for manual approval.
+    </div>
+    <button class="btn red" onclick="signOut()">Sign Out</button>
+  </section>
+
+  <section id="admin-view" class="hidden">
+    <div class="hero">
+      <div>
+        <div class="kicker">Valuna Operations</div>
+        <h1>Backend Control</h1>
+        <div class="sub">Separate admin surface for marketplace orders, verification flow, private beta access and approved admin records. This page is isolated from the customer marketplace build.</div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="refreshAll()">Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="stat"><div class="stat-n" id="stat-orders">0</div><div class="stat-l">Orders</div></div>
+      <div class="stat"><div class="stat-n" id="stat-queue">0</div><div class="stat-l">Verification Queue</div></div>
+      <div class="stat"><div class="stat-n" id="stat-beta">0</div><div class="stat-l">Beta Requests</div></div>
+      <div class="stat"><div class="stat-n" id="stat-admins">0</div><div class="stat-l">Approved Admins</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" onclick="switchTab(this,'orders')">Orders</button>
+      <button class="tab" onclick="switchTab(this,'verification')">Verification Queue</button>
+      <button class="tab" onclick="switchTab(this,'beta')">Beta Requests</button>
+      <button class="tab" onclick="switchTab(this,'admins')">Approved Admins</button>
+      <button class="tab" onclick="switchTab(this,'products')">Shop Products</button>
+    </div>
+
+    <div class="panel on" id="panel-orders">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Order</th><th>Card</th><th>Buyer</th><th>Seller</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="orders-body"><tr><td colspan="7"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" id="panel-verification">
+      <div id="verification-list"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <div class="panel" id="panel-beta">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Email</th><th>Status</th><th>Founder</th><th>Founder #</th><th>Access Starts</th><th>Requested</th></tr></thead>
+        <tbody id="beta-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" id="panel-admins">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Email</th><th>Access Level</th><th>Approved</th><th>Active</th></tr></thead>
+        <tbody id="admins-body"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" id="panel-products">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Product</th><th>SKU</th><th>Game</th><th>Price</th><th>Stock</th><th>Active</th></tr></thead>
+        <tbody id="products-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="footer-note">Admin page v0.1. Marketplace extraction has started. Do not remove the old marketplace admin section until this page is fully tested.</div>
+  </section>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://waktwmwhxrbttvgvkbnk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indha3R3bXdoeHJidHR2Z3ZrYm5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjE2NjMsImV4cCI6MjA5MjAzNzY2M30.vc65wWS9mx1Iq5Mre6rx2eVa-f9DtpKWIQm03L8elc0';
+let sb = null;
+let currentUser = null;
+let approvedAdmin = false;
+let cachedOrders = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+  buildStars();
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  bootAuth();
+});
+
+function buildStars() {
+  const wrap = document.getElementById('stars');
+  if (!wrap) return;
+  for (let i=0;i<80;i++) {
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+0.5;
+    s.style.width=size+'px'; s.style.height=size+'px';
+    s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%';
+    s.style.setProperty('--a', (Math.random()*0.55+0.08).toFixed(2));
+    s.style.setProperty('--dur', (Math.random()*3+2)+'s');
+    wrap.appendChild(s);
+  }
+}
+
+async function bootAuth() {
+  const { data } = await sb.auth.getSession();
+  if (data && data.session && data.session.user) {
+    currentUser = data.session.user;
+    await checkAdminAccess();
+  } else {
+    showAuth();
+  }
+
+  sb.auth.onAuthStateChange(async function(event, session) {
+    if (session && session.user) {
+      currentUser = session.user;
+      await checkAdminAccess();
+    } else {
+      currentUser = null;
+      approvedAdmin = false;
+      showAuth();
+    }
+  });
+}
+
+function setNotice(id,type,msg) {
+  const el=document.getElementById(id);
+  if (!el) return;
+  el.className='notice '+(type==='ok'?'ok':'err');
+  el.textContent=msg;
+}
+
+function showAuth() {
+  document.getElementById('auth-view').classList.remove('hidden');
+  document.getElementById('denied-view').classList.add('hidden');
+  document.getElementById('admin-view').classList.add('hidden');
+  document.getElementById('signout-btn').classList.add('hidden');
+}
+
+function showDenied() {
+  document.getElementById('auth-view').classList.add('hidden');
+  document.getElementById('denied-view').classList.remove('hidden');
+  document.getElementById('admin-view').classList.add('hidden');
+  document.getElementById('signout-btn').classList.remove('hidden');
+}
+
+function showAdmin() {
+  document.getElementById('auth-view').classList.add('hidden');
+  document.getElementById('denied-view').classList.add('hidden');
+  document.getElementById('admin-view').classList.remove('hidden');
+  document.getElementById('signout-btn').classList.remove('hidden');
+  refreshAll();
+}
+
+function getAuthEmailPass() {
+  return {
+    email:(document.getElementById('auth-email').value || '').trim().toLowerCase(),
+    password:(document.getElementById('auth-password').value || '').trim()
+  };
+}
+
+function validValunaEmail(email) {
+  return /^[^\s@]+@valuna\.app$/i.test(email);
+}
+
+async function adminSignIn() {
+  const { email, password } = getAuthEmailPass();
+  if (!validValunaEmail(email)) return setNotice('auth-status','err','Use an approved Valuna email address.');
+  if (!password) return setNotice('auth-status','err','Enter your password.');
+  setNotice('auth-status','ok','Signing in...');
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) return setNotice('auth-status','err',error.message);
+}
+
+async function checkAdminAccess() {
+  if (!currentUser || !currentUser.email) return showAuth();
+  if (!validValunaEmail(currentUser.email)) return showDenied();
+
+  const { data, error } = await sb.rpc('is_approved_admin');
+  if (error) {
+    console.error('Admin access check failed:', error);
+    showDenied();
+    return;
+  }
+  approvedAdmin = data === true;
+  if (approvedAdmin) showAdmin();
+  else showDenied();
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  showAuth();
+}
+
+function switchTab(btn,id) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('panel-'+id).classList.add('on');
+}
+
+function esc(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function money(v) {
+  const n=parseFloat(v || 0);
+  return 'A$'+(isNaN(n)?'0':n.toFixed(0));
+}
+
+function fmtDate(v) {
+  if (!v) return '—';
+  try { return new Date(v).toLocaleString('en-AU'); } catch(e) { return '—'; }
+}
+
+function statusLabel(s) {
+  const map={
+    offer_pending:'Offer Pending', offer_accepted:'Accepted', payment_pending:'Payment Pending',
+    confirmed:'Payment Confirmed', awaiting_seller_shipment:'Awaiting Seller Shipment',
+    seller_shipped_to_valuna:'Seller Shipped to Valuna', shipped_to_valuna:'Shipped to Valuna',
+    received_at_valuna:'Received at Valuna', card_received:'Card Received', verifying:'Verifying',
+    verification_passed:'Verification Passed', failed_verify:'Failed Verification',
+    dispatched_to_buyer:'Dispatched to Buyer', delivered:'Delivered', complete:'Complete',
+    cancelled:'Cancelled', refunded:'Refunded'
+  };
+  return map[s] || s || 'Unknown';
+}
+
+const STATUS_OPTIONS = [
+  'confirmed','awaiting_seller_shipment','seller_shipped_to_valuna','received_at_valuna',
+  'verifying','verification_passed','dispatched_to_buyer','delivered','complete','cancelled','refunded'
+];
+
+async function refreshAll() {
+  if (!approvedAdmin) return;
+  await Promise.allSettled([loadOrders(), loadBetaRequests(), loadApprovedAdmins(), loadProducts()]);
+}
+
+async function rpc(name,args) {
+  const { data, error } = await sb.rpc(name, args || {});
+  if (error) throw error;
+  return data;
+}
+
+async function loadOrders() {
+  try {
+    const data = await rpc('admin_get_orders');
+    cachedOrders = Array.isArray(data) ? data : [];
+    renderOrders(cachedOrders);
+    renderVerification(cachedOrders);
+    document.getElementById('stat-orders').textContent = cachedOrders.length;
+    document.getElementById('stat-queue').textContent = cachedOrders.filter(o => ['received_at_valuna','card_received','verifying'].includes(o.status)).length;
+  } catch(e) {
+    document.getElementById('orders-body').innerHTML='<tr><td colspan="7">Could not load orders: '+esc(e.message)+'</td></tr>';
+    document.getElementById('verification-list').innerHTML='<div class="empty">Could not load verification queue.</div>';
+  }
+}
+
+function renderOrders(rows) {
+  const body=document.getElementById('orders-body');
+  if (!rows.length) {
+    body.innerHTML='<tr><td colspan="7"><div class="empty">No marketplace orders yet</div></td></tr>';
+    return;
+  }
+  body.innerHTML = rows.map(function(o) {
+    const options = STATUS_OPTIONS.map(function(s){ return '<option value="'+s+'" '+(s===o.status?'selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
+    return '<tr>'+
+      '<td>#'+esc(String(o.id || '').substring(0,8))+'<div class="meta">'+fmtDate(o.created_at)+'</div></td>'+
+      '<td><strong>'+esc(o.card_name || 'Unknown card')+'</strong><div class="meta">'+esc(o.set_name || '')+'</div></td>'+
+      '<td>'+esc(o.buyer_username || '—')+'</td>'+
+      '<td>'+esc(o.seller_username || '—')+'</td>'+
+      '<td>'+money(o.total_amount)+'</td>'+
+      '<td><span class="badge">'+statusLabel(o.status)+'</span></td>'+
+      '<td><div class="actions"><select class="status-select" id="st-'+esc(o.id)+'">'+options+'</select><button class="btn" onclick="updateOrderStatus(\''+esc(o.id)+'\')">Update</button></div></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function renderVerification(rows) {
+  const list=document.getElementById('verification-list');
+  const queue=rows.filter(o => ['received_at_valuna','card_received','verifying'].includes(o.status));
+  if (!queue.length) {
+    list.innerHTML='<div class="empty">No cards awaiting verification</div>';
+    return;
+  }
+  list.innerHTML = queue.map(function(o) {
+    const premium = parseFloat(o.verification_fee || 0) > 0;
+    return '<div class="card">'+
+      '<div class="card-head"><div><div class="card-title">'+esc(o.card_name || 'Unknown card')+'</div><div class="meta">Order #'+esc(String(o.id || '').substring(0,8))+' · '+money(o.total_amount)+' · Buyer '+esc(o.buyer_username || '—')+'</div></div><span class="badge green">'+statusLabel(o.status)+'</span></div>'+
+      '<div class="meta">Standard Valuna verification included'+(premium?' · Premium scan + pre-grading report requested':'')+'</div>'+
+      '<div class="actions" style="margin-top:14px;"><button class="btn green" onclick="verifyOrder(\''+esc(o.id)+'\',\'pass\')">Pass Verification</button><button class="btn red" onclick="verifyOrder(\''+esc(o.id)+'\',\'fail\')">Fail Verification</button><button class="btn" onclick="setOrderStatus(\''+esc(o.id)+'\',\'received_at_valuna\')">Mark Received</button><button class="btn" onclick="setOrderStatus(\''+esc(o.id)+'\',\'verifying\')">Start Verifying</button></div>'+
+    '</div>';
+  }).join('');
+}
+
+async function updateOrderStatus(id) {
+  const select=document.getElementById('st-'+id);
+  if (!select) return;
+  await setOrderStatus(id, select.value);
+}
+
+async function setOrderStatus(id,status) {
+  try {
+    await rpc('admin_update_order_status', { p_order_id:id, p_status:status });
+    await loadOrders();
+  } catch(e) {
+    alert('Status update failed: '+e.message);
+  }
+}
+
+async function verifyOrder(id,result) {
+  try {
+    await rpc('admin_verify_order', { p_order_id:id, p_result:result });
+    await loadOrders();
+  } catch(e) {
+    alert('Verification update failed: '+e.message);
+  }
+}
+
+async function loadBetaRequests() {
+  try {
+    const rows = await rpc('admin_get_beta_requests');
+    document.getElementById('stat-beta').textContent = Array.isArray(rows) ? rows.length : 0;
+    const body=document.getElementById('beta-body');
+    if (!rows || !rows.length) {
+      body.innerHTML='<tr><td colspan="6"><div class="empty">No beta requests yet</div></td></tr>';
+      return;
+    }
+    body.innerHTML=rows.map(function(r){
+      return '<tr><td>'+esc(r.email)+'</td><td><span class="badge">'+esc(r.status)+'</span></td><td>'+(r.is_founder_eligible?'Yes':'No')+'</td><td>'+(r.founder_number || '—')+'</td><td>'+esc(r.access_starts_at || '—')+'</td><td>'+fmtDate(r.requested_at)+'</td></tr>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('beta-body').innerHTML='<tr><td colspan="6">Could not load beta requests: '+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function loadApprovedAdmins() {
+  try {
+    const rows = await rpc('admin_get_approved_admins');
+    document.getElementById('stat-admins').textContent = Array.isArray(rows) ? rows.filter(r => r.is_active).length : 0;
+    const body=document.getElementById('admins-body');
+    if (!rows || !rows.length) {
+      body.innerHTML='<tr><td colspan="4"><div class="empty">No approved admins yet</div></td></tr>';
+      return;
+    }
+    body.innerHTML=rows.map(function(r){
+      return '<tr><td>'+esc(r.email)+'</td><td>'+esc(r.access_level || 'admin')+'</td><td>'+fmtDate(r.approved_at)+'</td><td>'+(r.is_active?'Yes':'No')+'</td></tr>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('admins-body').innerHTML='<tr><td colspan="4">Could not load approved admins: '+esc(e.message)+'</td></tr>';
+  }
+}
+
+async function loadProducts() {
+  try {
+    const rows = await rpc('admin_get_shop_products');
+    const body=document.getElementById('products-body');
+    if (!rows || !rows.length) {
+      body.innerHTML='<tr><td colspan="6"><div class="empty">No shop products loaded</div></td></tr>';
+      return;
+    }
+    body.innerHTML=rows.map(function(p){
+      return '<tr><td><strong>'+esc(p.name || 'Untitled')+'</strong></td><td>'+esc(p.sku || '—')+'</td><td>'+esc(p.game || '—')+'</td><td>'+money(p.price)+'</td><td>'+esc(p.stock_qty == null ? '—' : p.stock_qty)+'</td><td>'+(p.is_active?'Yes':'No')+'</td></tr>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('products-body').innerHTML='<tr><td colspan="6">Could not load shop products: '+esc(e.message)+'</td></tr>';
+  }
+}
+</script>
+</body>
+
+<!-- Build: admin-02_STAFF_BACKEND_ENTRY_ONLY -->
+</html>
