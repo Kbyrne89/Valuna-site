@@ -254,6 +254,225 @@ tr:last-child td{border-bottom:none;}
   .shop-form-grid.three{grid-template-columns:1fr;}
 }
 
+
+/* ─────────────────────────────────────────────
+   ORDER OPERATIONS CONTROL — MARKETPLACE FLOW
+───────────────────────────────────────────── */
+.ops-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:14px;
+}
+.ops-copy{
+  color:#a8a2b8;
+  font-size:14px;
+  line-height:1.65;
+  max-width:820px;
+}
+.ops-toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.ops-filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:12px 0 16px;
+}
+.ops-filter{
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:999px;
+  padding:7px 12px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#9b96ae;
+  cursor:pointer;
+}
+.ops-filter.on{
+  color:#06080f;
+  border-color:transparent;
+  background:linear-gradient(135deg,#a87830,#e8c96a,#c9a84c,#8a6020);
+}
+.ops-grid{
+  display:grid;
+  gap:12px;
+}
+.ops-card{
+  background:#0a0810;
+  border:1px solid #1a1230;
+  border-radius:16px;
+  padding:16px;
+}
+.ops-card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+}
+.ops-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:19px;
+  color:#f2ecd8;
+  line-height:1.15;
+}
+.ops-meta{
+  font-size:13px;
+  color:#9b96ae;
+  line-height:1.6;
+  margin-top:4px;
+}
+.ops-amount{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;
+  font-size:28px;
+  color:#c9a84c;
+  line-height:1;
+  text-align:right;
+  white-space:nowrap;
+}
+.ops-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.ops-tag{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:1px solid rgba(201,168,76,.22);
+  color:#c9a84c;
+  background:rgba(201,168,76,.06);
+}
+.ops-tag.green{color:#2a9d6a;border-color:rgba(42,157,106,.25);background:rgba(42,157,106,.08);}
+.ops-tag.red{color:#e05252;border-color:rgba(224,82,82,.25);background:rgba(224,82,82,.08);}
+.ops-tag.purple{color:#a855f7;border-color:rgba(168,85,247,.25);background:rgba(168,85,247,.08);}
+.ops-flow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  margin-top:14px;
+}
+.ops-step{
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:10px;
+  padding:9px 7px;
+  text-align:center;
+  color:#6b6b6b;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.ops-step.done{
+  border-color:rgba(42,157,106,.25);
+  background:rgba(42,157,106,.06);
+  color:#2a9d6a;
+}
+.ops-step.active{
+  border-color:rgba(201,168,76,.35);
+  background:rgba(201,168,76,.08);
+  color:#c9a84c;
+}
+.ops-panels{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.ops-panel{
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:12px;
+  padding:12px;
+}
+.ops-panel-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-bottom:5px;
+}
+.ops-panel-body{
+  font-size:13px;
+  color:#c8c2ae;
+  line-height:1.6;
+}
+.ops-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.ops-action-btn{
+  border:none;
+  border-radius:9px;
+  padding:9px 12px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  cursor:pointer;
+  background:#0f0a1a;
+  border:1px solid #241840;
+  color:#c8c2ae;
+}
+.ops-action-btn.gold{
+  background:linear-gradient(135deg,#a87830,#e8c96a,#c9a84c,#8a6020);
+  border-color:transparent;
+  color:#06080f;
+}
+.ops-action-btn.green{
+  background:rgba(42,157,106,.10);
+  border-color:rgba(42,157,106,.25);
+  color:#2a9d6a;
+}
+.ops-action-btn.red{
+  background:rgba(224,82,82,.08);
+  border-color:rgba(224,82,82,.25);
+  color:#e05252;
+}
+.ops-status-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.ops-status-row .status-select{
+  min-width:220px;
+}
+.ops-note{
+  margin-top:10px;
+  font-size:12px;
+  color:#6b6b6b;
+  line-height:1.55;
+}
+@media(max-width:900px){
+  .ops-card-top{display:block;}
+  .ops-amount{text-align:left;margin-top:10px;}
+  .ops-flow{grid-template-columns:1fr 1fr;}
+  .ops-panels{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -327,10 +546,31 @@ tr:last-child td{border-bottom:none;}
     </div>
 
     <div class="panel on" id="panel-orders">
-      <div class="table-wrap"><table>
-        <thead><tr><th>Order</th><th>Card</th><th>Buyer</th><th>Seller</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="orders-body"><tr><td colspan="7"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
-      </table></div>
+      <div class="ops-head">
+        <div>
+          <div class="kicker">Marketplace Operations</div>
+          <h2 class="dash-heading" style="margin-bottom:6px;">Order Control</h2>
+          <div class="ops-copy">
+            Internal Valuna control for marketplace orders. Sellers only see their own after-sale steps in marketplace.html; employee status control, verification and dispatch are handled here.
+          </div>
+        </div>
+        <div class="ops-toolbar">
+          <button class="btn" onclick="loadOrders()">Refresh Orders</button>
+        </div>
+      </div>
+
+      <div class="ops-filters" id="ops-filters">
+        <button class="ops-filter on" onclick="setOpsFilter(this,'all')">All</button>
+        <button class="ops-filter" onclick="setOpsFilter(this,'seller')">Seller Action</button>
+        <button class="ops-filter" onclick="setOpsFilter(this,'intake')">Valuna Intake</button>
+        <button class="ops-filter" onclick="setOpsFilter(this,'verify')">Verification</button>
+        <button class="ops-filter" onclick="setOpsFilter(this,'dispatch')">Dispatch</button>
+        <button class="ops-filter" onclick="setOpsFilter(this,'complete')">Complete</button>
+      </div>
+
+      <div id="orders-body">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
     </div>
 
     <div class="panel" id="panel-verification">
@@ -712,29 +952,167 @@ async function loadOrders() {
   }
 }
 
+
+var opsFilter = 'all';
+
+function setOpsFilter(btn, filter) {
+  opsFilter = filter || 'all';
+  document.querySelectorAll('.ops-filter').forEach(function(b){ b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  renderOrders(cachedOrders || []);
+}
+
+function orderPhase(status) {
+  if (['confirmed','awaiting_seller_shipment','seller_shipped_to_valuna'].includes(status)) return 'seller';
+  if (['received_at_valuna','card_received'].includes(status)) return 'intake';
+  if (['verifying','verification_passed','failed_verify'].includes(status)) return 'verify';
+  if (['dispatched_to_buyer','delivered'].includes(status)) return 'dispatch';
+  if (['complete','cancelled','refunded'].includes(status)) return 'complete';
+  return 'all';
+}
+
+function orderStepIndex(status) {
+  const map = {
+    confirmed:0,
+    awaiting_seller_shipment:0,
+    seller_shipped_to_valuna:1,
+    shipped_to_valuna:1,
+    received_at_valuna:2,
+    card_received:2,
+    verifying:3,
+    verification_passed:3,
+    dispatched_to_buyer:4,
+    delivered:4,
+    complete:4
+  };
+  return map[status] == null ? 0 : map[status];
+}
+
+function opsFlowHtml(status) {
+  const labels = ['Sale', 'Seller → Valuna', 'Received', 'Verified', 'Dispatch'];
+  const idx = orderStepIndex(status);
+  return '<div class="ops-flow">' + labels.map(function(label, i) {
+    var cls = i < idx ? 'done' : (i === idx ? 'active' : '');
+    return '<div class="ops-step '+cls+'">'+esc(label)+'</div>';
+  }).join('') + '</div>';
+}
+
+function orderTags(o) {
+  var tags = [];
+  var phase = orderPhase(o.status);
+  tags.push('<span class="ops-tag">'+statusLabel(o.status)+'</span>');
+  if (phase === 'seller') tags.push('<span class="ops-tag purple">Seller step</span>');
+  if (phase === 'intake') tags.push('<span class="ops-tag">Valuna intake</span>');
+  if (phase === 'verify') tags.push('<span class="ops-tag green">Verification</span>');
+  if (phase === 'dispatch') tags.push('<span class="ops-tag purple">Dispatch</span>');
+  if (phase === 'complete') tags.push('<span class="ops-tag green">Complete</span>');
+  if (parseFloat(o.verification_fee || 0) > 0) tags.push('<span class="ops-tag">Premium Scan</span>');
+  return '<div class="ops-tags">'+tags.join('')+'</div>';
+}
+
+function nextOpsActions(o) {
+  var id = esc(o.id);
+  var s = o.status;
+  var btns = [];
+
+  if (s === 'confirmed') {
+    btns.push('<button class="ops-action-btn gold" onclick="setOrderStatus(\''+id+'\',\'awaiting_seller_shipment\')">Ask Seller to Ship</button>');
+  }
+  if (s === 'awaiting_seller_shipment') {
+    btns.push('<button class="ops-action-btn" onclick="setOrderStatus(\''+id+'\',\'seller_shipped_to_valuna\')">Mark Seller Shipped</button>');
+  }
+  if (s === 'seller_shipped_to_valuna' || s === 'shipped_to_valuna') {
+    btns.push('<button class="ops-action-btn gold" onclick="setOrderStatus(\''+id+'\',\'received_at_valuna\')">Mark Received at Valuna</button>');
+  }
+  if (s === 'received_at_valuna' || s === 'card_received') {
+    btns.push('<button class="ops-action-btn gold" onclick="setOrderStatus(\''+id+'\',\'verifying\')">Start Verification</button>');
+  }
+  if (s === 'verifying' || s === 'received_at_valuna' || s === 'card_received') {
+    btns.push('<button class="ops-action-btn green" onclick="verifyOrder(\''+id+'\',\'pass\')">Pass Verification</button>');
+    btns.push('<button class="ops-action-btn red" onclick="verifyOrder(\''+id+'\',\'fail\')">Fail Verification</button>');
+  }
+  if (s === 'verification_passed') {
+    btns.push('<button class="ops-action-btn gold" onclick="setOrderStatus(\''+id+'\',\'dispatched_to_buyer\')">Dispatch to Buyer</button>');
+  }
+  if (s === 'dispatched_to_buyer') {
+    btns.push('<button class="ops-action-btn green" onclick="setOrderStatus(\''+id+'\',\'delivered\')">Mark Delivered</button>');
+  }
+  if (s === 'delivered') {
+    btns.push('<button class="ops-action-btn green" onclick="setOrderStatus(\''+id+'\',\'complete\')">Complete Order</button>');
+  }
+
+  return btns.length ? '<div class="ops-actions">'+btns.join('')+'</div>' : '<div class="ops-note">No quick action needed for this status.</div>';
+}
+
 function renderOrders(rows) {
   const body=document.getElementById('orders-body');
-  if (!rows.length) {
-    body.innerHTML='<tr><td colspan="7"><div class="empty">No marketplace orders yet</div></td></tr>';
+  if (!body) return;
+
+  var filtered = (rows || []).filter(function(o) {
+    return opsFilter === 'all' || orderPhase(o.status) === opsFilter;
+  });
+
+  if (!filtered.length) {
+    body.innerHTML='<div class="empty">No orders match this view.</div>';
     return;
   }
-  body.innerHTML = rows.map(function(o) {
+
+  body.innerHTML = '<div class="ops-grid">' + filtered.map(function(o) {
     const options = STATUS_OPTIONS.map(function(s){ return '<option value="'+s+'" '+(s===o.status?'selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
-    return '<tr>'+
-      '<td>#'+esc(String(o.id || '').substring(0,8))+'<div class="meta">'+fmtDate(o.created_at)+'</div></td>'+
-      '<td><strong>'+esc(o.card_name || 'Unknown card')+'</strong><div class="meta">'+esc(o.set_name || '')+'</div></td>'+
-      '<td>'+esc(o.buyer_username || '—')+'</td>'+
-      '<td>'+esc(o.seller_username || '—')+'</td>'+
-      '<td>'+money(o.total_amount)+'</td>'+
-      '<td><span class="badge">'+statusLabel(o.status)+'</span></td>'+
-      '<td><div class="actions"><select class="status-select" id="st-'+esc(o.id)+'">'+options+'</select><button class="btn" onclick="updateOrderStatus(\''+esc(o.id)+'\')">Update</button></div></td>'+
-    '</tr>';
-  }).join('');
+
+    var buyer = esc(o.buyer_username || o.buyer_email || '—');
+    var seller = esc(o.seller_username || o.seller_email || '—');
+
+    return '<div class="ops-card">'+
+      '<div class="ops-card-top">'+
+        '<div>'+
+          '<div class="ops-title">'+esc(o.card_name || 'Unknown card')+'</div>'+
+          '<div class="ops-meta">Order #'+esc(String(o.id || '').substring(0,8))+' · '+fmtDate(o.created_at)+'<br>Buyer: '+buyer+' · Seller: '+seller+'</div>'+
+          orderTags(o)+
+        '</div>'+
+        '<div class="ops-amount">'+money(o.total_amount)+'</div>'+
+      '</div>'+
+
+      opsFlowHtml(o.status)+
+
+      '<div class="ops-panels">'+
+        '<div class="ops-panel"><div class="ops-panel-title">Seller-facing flow</div><div class="ops-panel-body">Seller should only see Valuna intake instructions. Buyer delivery details remain hidden from seller.</div></div>'+
+        '<div class="ops-panel"><div class="ops-panel-title">Valuna internal action</div><div class="ops-panel-body">'+opsInternalInstruction(o.status)+'</div></div>'+
+      '</div>'+
+
+      nextOpsActions(o)+
+
+      '<div class="ops-status-row">'+
+        '<select class="status-select" id="st-'+esc(o.id)+'">'+options+'</select>'+
+        '<button class="btn" onclick="updateOrderStatus(\''+esc(o.id)+'\')">Manual Update</button>'+
+      '</div>'+
+    '</div>';
+  }).join('') + '</div>';
+}
+
+function opsInternalInstruction(status) {
+  const map = {
+    confirmed:'Confirm payment/order details, then move to awaiting seller shipment when ready.',
+    awaiting_seller_shipment:'Seller needs to send card to Valuna intake. Do not expose buyer address.',
+    seller_shipped_to_valuna:'Watch for incoming card at Valuna. Mark received once intake is complete.',
+    shipped_to_valuna:'Watch for incoming card at Valuna. Mark received once intake is complete.',
+    received_at_valuna:'Card has arrived. Prepare for inspection and verification.',
+    card_received:'Card has arrived. Prepare for inspection and verification.',
+    verifying:'Complete Valuna checks. Pass/fail verification when complete.',
+    verification_passed:'Prepare dispatch from Valuna to buyer.',
+    dispatched_to_buyer:'Tracking should be monitored until delivery.',
+    delivered:'Ready to complete and release/finalise order.',
+    complete:'Order complete.',
+    cancelled:'Order cancelled.',
+    refunded:'Order refunded.'
+  };
+  return esc(map[status] || 'Review order and update status as needed.');
 }
 
 function renderVerification(rows) {
   const list=document.getElementById('verification-list');
-  const queue=rows.filter(o => ['received_at_valuna','card_received','verifying'].includes(o.status));
+  if (!list) return;
+  const queue=(rows || []).filter(o => ['received_at_valuna','card_received','verifying'].includes(o.status));
   if (!queue.length) {
     list.innerHTML='<div class="empty">No cards awaiting verification</div>';
     return;
@@ -757,6 +1135,9 @@ async function updateOrderStatus(id) {
 
 async function setOrderStatus(id,status) {
   try {
+    if (!id || !status) return;
+    const ok = confirm('Update this order to "' + statusLabel(status) + '"?');
+    if (!ok) return;
     await rpc('admin_update_order_status', { p_order_id:id, p_status:status });
     await loadOrders();
   } catch(e) {
@@ -764,8 +1145,11 @@ async function setOrderStatus(id,status) {
   }
 }
 
-async function verifyOrder(id,result) {
+async function verifyOrderasync function verifyOrder(id,result) {
   try {
+    const label = result === 'pass' ? 'PASS verification' : 'FAIL verification';
+    const ok = confirm('Confirm ' + label + ' for this order?');
+    if (!ok) return;
     await rpc('admin_verify_order', { p_order_id:id, p_result:result });
     await loadOrders();
   } catch(e) {
@@ -773,7 +1157,7 @@ async function verifyOrder(id,result) {
   }
 }
 
-async function loadBetaRequests() {
+async function loadBetaRequestsasync function loadBetaRequests() {
   try {
     const rows = await rpc('admin_get_beta_requests');
     document.getElementById('stat-beta').textContent = Array.isArray(rows) ? rows.length : 0;
@@ -1204,4 +1588,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-03_SHOP_PRODUCT_CONTROL_AUSPOST_READY -->
 
 <!-- Build: admin-04_SHOP_SAVE_STATUS_FIX -->
+
+<!-- Build: admin-05_ORDER_OPERATIONS_CONTROL -->
 </html>
