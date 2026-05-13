@@ -997,6 +997,25 @@ function getCheckValue(id) {
   return !!(el && el.checked);
 }
 
+
+function withShopTimeout(promise, label, ms) {
+  return Promise.race([
+    promise,
+    new Promise(function(_, reject) {
+      setTimeout(function() {
+        reject(new Error(label + ' timed out. Please try again, or save without images first.'));
+      }, ms || 20000);
+    })
+  ]);
+}
+
+function setShopSaveButtonLoading(isLoading) {
+  var btn = document.getElementById('shop-save-btn');
+  if (!btn) return;
+  btn.disabled = !!isLoading;
+  btn.textContent = isLoading ? 'Saving...' : (getInputValue('shop-product-id') ? 'Update Product' : 'Save Product');
+}
+
 async function uploadShopImages() {
   var files = document.getElementById('shop-image-files');
   if (!files || !files.files || !files.files.length) return [];
@@ -1004,14 +1023,30 @@ async function uploadShopImages() {
   var urls = [];
   for (var i=0;i<files.files.length;i++) {
     var file = files.files[i];
+
+    if (!file.type || file.type.indexOf('image/') !== 0) {
+      throw new Error('Only image files can be uploaded.');
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+      throw new Error('Image is too large. Please use an image under 8MB.');
+    }
+
+    setShopAdminStatus('ok','Uploading image ' + (i + 1) + ' of ' + files.files.length + '...');
+
     var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    var safe = file.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+    var safe = file.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40) || 'product';
     var path = 'products/' + Date.now() + '-' + i + '-' + safe + '.' + ext;
 
-    var upload = await sb.storage.from('shop-images').upload(path, file, {
-      upsert: true,
-      cacheControl: '3600'
-    });
+    var upload = await withShopTimeout(
+      sb.storage.from('shop-images').upload(path, file, {
+        upsert: true,
+        cacheControl: '3600',
+        contentType: file.type || 'image/jpeg'
+      }),
+      'Image upload',
+      25000
+    );
 
     if (upload.error) throw upload.error;
 
@@ -1024,26 +1059,45 @@ async function uploadShopImages() {
 }
 
 async function saveShopProduct() {
+  setShopSaveButtonLoading(true);
+
   try {
     var id = getInputValue('shop-product-id');
     var name = getInputValue('shop-name');
-    if (!name) return setShopAdminStatus('err','Product name is required.');
+    if (!name) {
+      setShopSaveButtonLoading(false);
+      return setShopAdminStatus('err','Product name is required.');
+    }
 
     var price = getNumberValue('shop-price', null);
-    if (price == null || price <= 0) return setShopAdminStatus('err','Enter a valid product price.');
+    if (price == null || price <= 0) {
+      setShopSaveButtonLoading(false);
+      return setShopAdminStatus('err','Enter a valid product price.');
+    }
 
     var stock = getNumberValue('shop-stock', 0);
-    if (stock == null || stock < 0) return setShopAdminStatus('err','Enter a valid stock quantity.');
+    if (stock == null || stock < 0) {
+      setShopSaveButtonLoading(false);
+      return setShopAdminStatus('err','Enter a valid stock quantity.');
+    }
 
-    setShopAdminStatus('ok','Saving product...');
+    setShopAdminStatus('ok','Preparing product...');
 
     var existingUrls = getInputValue('shop-image-urls')
       .split('\n')
       .map(function(x){ return x.trim(); })
       .filter(Boolean);
 
-    var uploadedUrls = await uploadShopImages();
+    var uploadedUrls = [];
+    var files = document.getElementById('shop-image-files');
+
+    if (files && files.files && files.files.length) {
+      uploadedUrls = await uploadShopImages();
+    }
+
     var images = existingUrls.concat(uploadedUrls);
+
+    setShopAdminStatus('ok','Saving product details...');
 
     var payload = {
       name: name,
@@ -1072,21 +1126,29 @@ async function saveShopProduct() {
       updated_at: new Date().toISOString()
     };
 
-    var result;
+    var query;
     if (id) {
-      result = await sb.from('shop_products').update(payload).eq('id', id);
+      query = sb.from('shop_products').update(payload).eq('id', id);
     } else {
       payload.created_at = new Date().toISOString();
-      result = await sb.from('shop_products').insert(payload);
+      query = sb.from('shop_products').insert(payload);
     }
 
+    var result = await withShopTimeout(query, 'Product save', 20000);
     if (result.error) throw result.error;
 
     setShopAdminStatus('ok', id ? 'Product updated.' : 'Product added.');
-    resetShopProductForm(true);
-    await loadProducts();
+
+    await withShopTimeout(loadProducts(), 'Product refresh', 15000);
+
+    // Keep the success message visible briefly, then close/reset.
+    setTimeout(function() {
+      resetShopProductForm(true);
+      setShopSaveButtonLoading(false);
+    }, 450);
   } catch(e) {
     console.error('Shop product save failed:', e);
+    setShopSaveButtonLoading(false);
     setShopAdminStatus('err', e.message || 'Product could not be saved.');
   }
 }
@@ -1140,4 +1202,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-02_STAFF_BACKEND_ENTRY_ONLY -->
 
 <!-- Build: admin-03_SHOP_PRODUCT_CONTROL_AUSPOST_READY -->
+
+<!-- Build: admin-04_SHOP_SAVE_STATUS_FIX -->
 </html>
