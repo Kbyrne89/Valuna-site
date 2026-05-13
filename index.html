@@ -2842,6 +2842,7 @@ document.addEventListener('keydown', function(e) {
 
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 window.VALUNA_SUPABASE_URL = window.VALUNA_SUPABASE_URL || 'https://waktwmwhxrbttvgvkbnk.supabase.co';
 window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indha3R3bXdoeHJidHR2Z3ZrYm5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjE2NjMsImV4cCI6MjA5MjAzNzY2M30.vc65wWS9mx1Iq5Mre6rx2eVa-f9DtpKWIQm03L8elc0';
@@ -2873,7 +2874,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
   function getSupabaseClient(){
     var url = window.VALUNA_SUPABASE_URL || 'https://waktwmwhxrbttvgvkbnk.supabase.co';
     var key = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indha3R3bXdoeHJidHR2Z3ZrYm5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjE2NjMsImV4cCI6MjA5MjAzNzY2M30.vc65wWS9mx1Iq5Mre6rx2eVa-f9DtpKWIQm03L8elc0';
-    if(!window.supabase || !url || !key){ return null; }
+    if(!window.supabase || !url || !key){ console.warn('Valuna admin Supabase auth client unavailable', { hasSupabase: !!window.supabase, hasUrl: !!url, hasKey: !!key }); return null; }
     if(window.valunaAdminSb) return window.valunaAdminSb;
     window.valunaAdminSb=window.supabase.createClient(url, key);
     return window.valunaAdminSb;
@@ -2986,4 +2987,6 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 <!-- Build: index-61_STAFF_ADMIN_DIRECT_LOGIN -->
 
 <!-- Build: index-62_STAFF_ADMIN_SUPABASE_GLOBAL_FIX -->
+
+<!-- Build: index-63_STAFF_ADMIN_SUPABASE_CDN_FIX -->
 </html>
