@@ -1145,7 +1145,7 @@ async function setOrderStatus(id,status) {
   }
 }
 
-async function verifyOrderasync function verifyOrder(id,result) {
+async function verifyOrder(id,result) {
   try {
     const label = result === 'pass' ? 'PASS verification' : 'FAIL verification';
     const ok = confirm('Confirm ' + label + ' for this order?');
@@ -1157,7 +1157,7 @@ async function verifyOrderasync function verifyOrder(id,result) {
   }
 }
 
-async function loadBetaRequestsasync function loadBetaRequests() {
+async function loadBetaRequests() {
   try {
     const rows = await rpc('admin_get_beta_requests');
     document.getElementById('stat-beta').textContent = Array.isArray(rows) ? rows.length : 0;
@@ -1590,4 +1590,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-04_SHOP_SAVE_STATUS_FIX -->
 
 <!-- Build: admin-05_ORDER_OPERATIONS_CONTROL -->
+
+<!-- Build: admin-06_ORDER_OPERATIONS_LOGIN_SYNTAX_FIX -->
 </html>
