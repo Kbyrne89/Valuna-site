@@ -473,6 +473,43 @@ tr:last-child td{border-bottom:none;}
   .ops-panels{grid-template-columns:1fr;}
 }
 
+
+/* ─────────────────────────────────────────────
+   SHOP ORDER CONTROL — DIRECT FROM VALUNA STOCK
+───────────────────────────────────────────── */
+.shop-order-flow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  margin-top:14px;
+}
+.shop-order-step{
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:10px;
+  padding:9px 7px;
+  text-align:center;
+  color:#6b6b6b;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.shop-order-step.done{
+  border-color:rgba(42,157,106,.25);
+  background:rgba(42,157,106,.06);
+  color:#2a9d6a;
+}
+.shop-order-step.active{
+  border-color:rgba(201,168,76,.35);
+  background:rgba(201,168,76,.08);
+  color:#c9a84c;
+}
+@media(max-width:900px){
+  .shop-order-flow{grid-template-columns:1fr 1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -538,7 +575,8 @@ tr:last-child td{border-bottom:none;}
     </div>
 
     <div class="tabs">
-      <button class="tab on" onclick="switchTab(this,'orders')">Orders</button>
+      <button class="tab on" onclick="switchTab(this,'orders')">Marketplace Orders</button>
+      <button class="tab" onclick="switchTab(this,'shoporders')">Shop Orders</button>
       <button class="tab" onclick="switchTab(this,'verification')">Verification Queue</button>
       <button class="tab" onclick="switchTab(this,'beta')">Beta Requests</button>
       <button class="tab" onclick="switchTab(this,'admins')">Approved Admins</button>
@@ -549,9 +587,9 @@ tr:last-child td{border-bottom:none;}
       <div class="ops-head">
         <div>
           <div class="kicker">Marketplace Operations</div>
-          <h2 class="dash-heading" style="margin-bottom:6px;">Order Control</h2>
+          <h2 class="dash-heading" style="margin-bottom:6px;">Marketplace Order Control</h2>
           <div class="ops-copy">
-            Internal Valuna control for marketplace orders. Sellers only see their own after-sale steps in marketplace.html; employee status control, verification and dispatch are handled here.
+            Internal control for marketplace seller orders only. This flow is Seller → Valuna → Buyer and includes Valuna Intake, verification and dispatch.
           </div>
         </div>
         <div class="ops-toolbar">
@@ -569,6 +607,35 @@ tr:last-child td{border-bottom:none;}
       </div>
 
       <div id="orders-body">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+
+    <div class="panel" id="panel-shoporders">
+      <div class="ops-head">
+        <div>
+          <div class="kicker">Direct From Valuna</div>
+          <h2 class="dash-heading" style="margin-bottom:6px;">Shop Order Control</h2>
+          <div class="ops-copy">
+            Internal fulfilment flow for Valuna-owned stock. Shop orders do not use Valuna Intake because stock is already held by Valuna.
+          </div>
+        </div>
+        <div class="ops-toolbar">
+          <button class="btn" onclick="loadShopOrders()">Refresh Shop Orders</button>
+        </div>
+      </div>
+
+      <div class="ops-filters" id="shop-order-filters">
+        <button class="ops-filter on" onclick="setShopOrderFilter(this,'all')">All</button>
+        <button class="ops-filter" onclick="setShopOrderFilter(this,'processing')">Processing</button>
+        <button class="ops-filter" onclick="setShopOrderFilter(this,'packing')">Packing</button>
+        <button class="ops-filter" onclick="setShopOrderFilter(this,'ready_to_dispatch')">Ready</button>
+        <button class="ops-filter" onclick="setShopOrderFilter(this,'dispatched')">Dispatched</button>
+        <button class="ops-filter" onclick="setShopOrderFilter(this,'complete')">Complete</button>
+      </div>
+
+      <div id="shop-orders-body">
         <div class="loading"><div class="spinner"></div></div>
       </div>
     </div>
@@ -929,7 +996,7 @@ const STATUS_OPTIONS = [
 
 async function refreshAll() {
   if (!approvedAdmin) return;
-  await Promise.allSettled([loadOrders(), loadBetaRequests(), loadApprovedAdmins(), loadProducts()]);
+  await Promise.allSettled([loadOrders(), loadShopOrders(), loadBetaRequests(), loadApprovedAdmins(), loadProducts()]);
 }
 
 async function rpc(name,args) {
@@ -1154,6 +1221,177 @@ async function verifyOrder(id,result) {
     await loadOrders();
   } catch(e) {
     alert('Verification update failed: '+e.message);
+  }
+}
+
+
+var cachedShopOrders = [];
+var shopOrderFilter = 'all';
+
+const SHOP_ORDER_STATUS_OPTIONS = [
+  'processing','packing','ready_to_dispatch','dispatched','delivered','complete','cancelled','refunded'
+];
+
+function shopStatusLabel(s) {
+  const map = {
+    processing:'Processing',
+    packing:'Packing',
+    ready_to_dispatch:'Ready to Dispatch',
+    dispatched:'Dispatched',
+    delivered:'Delivered',
+    complete:'Complete',
+    cancelled:'Cancelled',
+    refunded:'Refunded'
+  };
+  return map[s] || s || 'Unknown';
+}
+
+function setShopOrderFilter(btn, filter) {
+  shopOrderFilter = filter || 'all';
+  document.querySelectorAll('#shop-order-filters .ops-filter').forEach(function(b){ b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  renderShopOrders(cachedShopOrders || []);
+}
+
+function shopOrderStepIndex(status) {
+  const map = {
+    processing:0,
+    packing:1,
+    ready_to_dispatch:2,
+    dispatched:3,
+    delivered:4,
+    complete:4
+  };
+  return map[status] == null ? 0 : map[status];
+}
+
+function shopOrderFlowHtml(status) {
+  const labels = ['Processing', 'Packing', 'Ready', 'Dispatch', 'Delivered'];
+  const idx = shopOrderStepIndex(status);
+  return '<div class="shop-order-flow">' + labels.map(function(label, i) {
+    var cls = i < idx ? 'done' : (i === idx ? 'active' : '');
+    return '<div class="shop-order-step '+cls+'">'+esc(label)+'</div>';
+  }).join('') + '</div>';
+}
+
+async function loadShopOrders() {
+  var body = document.getElementById('shop-orders-body');
+  if (!body) return;
+  try {
+    body.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+    // Direct-from-Valuna shop orders. If the table is not live yet, show a clean empty state.
+    const { data, error } = await sb
+      .from('shop_orders')
+      .select('*')
+      .order('created_at', { ascending:false });
+
+    if (error) throw error;
+
+    cachedShopOrders = Array.isArray(data) ? data : [];
+    renderShopOrders(cachedShopOrders);
+  } catch(e) {
+    var msg = String(e.message || '');
+    if (msg.toLowerCase().indexOf('shop_orders') !== -1 || msg.toLowerCase().indexOf('does not exist') !== -1 || msg.toLowerCase().indexOf('schema cache') !== -1) {
+      body.innerHTML = '<div class="empty">Shop order table is not connected yet. This tab is ready for direct-from-Valuna shop fulfilment once shop checkout creates shop_orders.</div>';
+    } else {
+      body.innerHTML = '<div class="empty">Could not load shop orders: '+esc(msg)+'</div>';
+    }
+  }
+}
+
+function renderShopOrders(rows) {
+  var body = document.getElementById('shop-orders-body');
+  if (!body) return;
+
+  var filtered = (rows || []).filter(function(o) {
+    return shopOrderFilter === 'all' || o.status === shopOrderFilter;
+  });
+
+  if (!filtered.length) {
+    body.innerHTML = '<div class="empty">No shop orders in this view.</div>';
+    return;
+  }
+
+  body.innerHTML = '<div class="ops-grid">' + filtered.map(function(o) {
+    var status = o.status || 'processing';
+    var options = SHOP_ORDER_STATUS_OPTIONS.map(function(s){ return '<option value="'+s+'" '+(s===status?'selected':'')+'>'+shopStatusLabel(s)+'</option>'; }).join('');
+    var customer = esc(o.customer_email || o.buyer_email || o.email || o.customer_name || '—');
+    var ref = esc(o.order_number || String(o.id || '').substring(0,8));
+    var total = o.total_amount || o.total || o.amount || 0;
+
+    return '<div class="ops-card">'+
+      '<div class="ops-card-top">'+
+        '<div>'+
+          '<div class="ops-title">Shop Order #'+ref+'</div>'+
+          '<div class="ops-meta">Direct from Valuna stock · '+fmtDate(o.created_at)+'<br>Customer: '+customer+'</div>'+
+          '<div class="ops-tags"><span class="ops-tag green">'+shopStatusLabel(status)+'</span><span class="ops-tag">Valuna Stock → Buyer</span></div>'+
+        '</div>'+
+        '<div class="ops-amount">'+money(total)+'</div>'+
+      '</div>'+
+      shopOrderFlowHtml(status)+
+      '<div class="ops-panels">'+
+        '<div class="ops-panel"><div class="ops-panel-title">Shop fulfilment</div><div class="ops-panel-body">'+shopInternalInstruction(status)+'</div></div>'+
+        '<div class="ops-panel"><div class="ops-panel-title">AusPost foundation</div><div class="ops-panel-body">Use this flow for packing and dispatch. AusPost label/tracking connection can plug into Ready to Dispatch later.</div></div>'+
+      '</div>'+
+      shopNextActions(o)+
+      '<div class="ops-status-row">'+
+        '<select class="status-select" id="shop-st-'+esc(o.id)+'">'+options+'</select>'+
+        '<button class="btn" onclick="updateShopOrderStatus(\''+esc(o.id)+'\')">Manual Update</button>'+
+      '</div>'+
+    '</div>';
+  }).join('') + '</div>';
+}
+
+function shopInternalInstruction(status) {
+  const map = {
+    processing:'Review payment/order details and confirm stock availability.',
+    packing:'Pick stock from Valuna inventory and pack the order.',
+    ready_to_dispatch:'Package is ready for AusPost label and tracking.',
+    dispatched:'Order has left Valuna. Monitor tracking.',
+    delivered:'Order delivered. Ready to complete.',
+    complete:'Shop order complete.',
+    cancelled:'Shop order cancelled.',
+    refunded:'Shop order refunded.'
+  };
+  return esc(map[status] || 'Review shop order and update status as needed.');
+}
+
+function shopNextActions(o) {
+  var id = esc(o.id);
+  var s = o.status || 'processing';
+  var btns = [];
+
+  if (s === 'processing') btns.push('<button class="ops-action-btn gold" onclick="setShopOrderStatus(\''+id+'\',\'packing\')">Start Packing</button>');
+  if (s === 'packing') btns.push('<button class="ops-action-btn gold" onclick="setShopOrderStatus(\''+id+'\',\'ready_to_dispatch\')">Ready to Dispatch</button>');
+  if (s === 'ready_to_dispatch') btns.push('<button class="ops-action-btn gold" onclick="setShopOrderStatus(\''+id+'\',\'dispatched\')">Mark Dispatched</button>');
+  if (s === 'dispatched') btns.push('<button class="ops-action-btn green" onclick="setShopOrderStatus(\''+id+'\',\'delivered\')">Mark Delivered</button>');
+  if (s === 'delivered') btns.push('<button class="ops-action-btn green" onclick="setShopOrderStatus(\''+id+'\',\'complete\')">Complete Order</button>');
+
+  return btns.length ? '<div class="ops-actions">'+btns.join('')+'</div>' : '<div class="ops-note">No quick action needed for this status.</div>';
+}
+
+async function updateShopOrderStatus(id) {
+  var select = document.getElementById('shop-st-' + id);
+  if (!select) return;
+  await setShopOrderStatus(id, select.value);
+}
+
+async function setShopOrderStatus(id, status) {
+  try {
+    if (!id || !status) return;
+    const ok = confirm('Update this shop order to "' + shopStatusLabel(status) + '"?');
+    if (!ok) return;
+
+    const { error } = await sb
+      .from('shop_orders')
+      .update({ status: status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) throw error;
+    await loadShopOrders();
+  } catch(e) {
+    alert('Shop order update failed: ' + e.message);
   }
 }
 
@@ -1592,4 +1830,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-05_ORDER_OPERATIONS_CONTROL -->
 
 <!-- Build: admin-06_ORDER_OPERATIONS_LOGIN_SYNTAX_FIX -->
+
+<!-- Build: admin-07_SPLIT_MARKETPLACE_AND_SHOP_ORDERS -->
 </html>
