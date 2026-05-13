@@ -2926,15 +2926,15 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
   function getPasswordSetupRedirect(){
     try{
       var url = new URL(window.location.href);
-      url.searchParams.set('employee_reset','1');
-      url.hash='employee-password-reset';
+      url.searchParams.set('employee_activate','1');
+      url.hash='employee-activation';
       return url.href;
     }catch(e){ return window.location.href; }
   }
   function hasRecoveryMarker(){
     var marker=String(window.location.search || '')+' '+String(window.location.hash || '');
     marker=marker.toLowerCase();
-    return marker.indexOf('type=recovery') !== -1 || marker.indexOf('employee_reset=1') !== -1 || marker.indexOf('access_token=') !== -1;
+    return marker.indexOf('type=recovery') !== -1 || marker.indexOf('employee_activate=1') !== -1 || marker.indexOf('employee_reset=1') !== -1 || marker.indexOf('access_token=') !== -1;
   }
   function openEmployeePanel(){
     if(card && !card.classList.contains('open')) card.classList.add('open');
@@ -2959,9 +2959,11 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
   if(hasRecoveryMarker()){
     recoveryMode=true;
     openEmployeePanel();
-    if(setupBtn) setupBtn.textContent='Set New Password';
-    if(passInput) passInput.placeholder='New password (min 8 characters)';
-    setAdminAccessStatus('ok','Password setup link opened. Enter a new password, then press Set New Password.');
+    if(setupBtn) setupBtn.textContent='Activate';
+    if(passInput) passInput.placeholder='Create password (min 8 characters)';
+    if(emailInput) emailInput.placeholder='approved employee email';
+    setAdminAccessStatus('ok','Employee activation link opened. Create your password, then press Activate.');
+    setTimeout(function(){ try{ document.getElementById('admin-access').scrollIntoView({behavior:'smooth',block:'center'}); }catch(scrollErr){} }, 250);
   }
 
   if(form){
@@ -3016,12 +3018,12 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 
       if(recoveryMode){
         if(!password || password.length < 8){
-          setAdminAccessStatus('err','Enter a new password with at least 8 characters.');
+          setAdminAccessStatus('err','Create a password with at least 8 characters.');
           return;
         }
         setupBtn.disabled=true;
-        setupBtn.textContent='Setting Password...';
-        setAdminAccessStatus('ok','Setting staff password...');
+        setupBtn.textContent='Activating...';
+        setAdminAccessStatus('ok','Activating employee access...');
 
         sb.auth.getSession()
           .then(function(){ return sb.auth.getUser(); })
@@ -3034,35 +3036,35 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
           })
           .then(function(updateResult){
             if(updateResult.error) throw updateResult.error;
-            setAdminAccessStatus('ok','Password created. Opening backend...');
+            setAdminAccessStatus('ok','Employee access activated. Opening backend...');
             setTimeout(function(){ window.location.href=getAdminRedirect(); }, 900);
           })
           .catch(function(err){
-            var msg = err && err.message ? err.message : 'Password setup failed.';
+            var msg = err && err.message ? err.message : 'Employee activation failed.';
             setAdminAccessStatus('err',msg);
           })
           .finally(function(){
             setupBtn.disabled=false;
-            setupBtn.textContent='Set New Password';
+            setupBtn.textContent='Activate';
           });
         return;
       }
 
       if(!isApprovedStaffEmail(email)){
-        setAdminAccessStatus('err','Password setup is restricted to approved Valuna staff emails only.');
+        setAdminAccessStatus('err','Create Password is restricted to approved Valuna staff emails only.');
         return;
       }
 
       setupBtn.disabled=true;
       setupBtn.textContent='Sending Email...';
-      setAdminAccessStatus('ok','Sending password setup email...');
+      setAdminAccessStatus('ok','Sending employee activation email...');
       sb.auth.resetPasswordForEmail(email,{ redirectTo:getPasswordSetupRedirect() })
         .then(function(result){
           if(result.error) throw result.error;
-          setAdminAccessStatus('ok','Password setup email sent to '+email+'. Open the email, set the password, then return here to sign in.');
+          setAdminAccessStatus('ok','Employee activation email sent to '+email+'. Open the email, create the password, then press Activate.');
         })
         .catch(function(err){
-          var msg = err && err.message ? err.message : 'Password setup email could not be sent.';
+          var msg = err && err.message ? err.message : 'Employee activation email could not be sent.';
           setAdminAccessStatus('err',msg);
         })
         .finally(function(){
@@ -3088,7 +3090,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 
 <!-- Build: index-56_ADMIN_ACCESS_NO_VISIBLE_NAMES -->
 
-<!-- Build: index-68_HELLO_CREATE_PASSWORD_SIGN_IN_FIX -->
+<!-- Build: index-69_EMPLOYEE_ACTIVATE_COPY_REDIRECT_FIX -->
 
 <!-- Build: index-57_PUBLIC_PLATFORM_ENTRY_LOCKED -->
 
