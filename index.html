@@ -1890,11 +1890,11 @@ footer{border-top:1px solid rgba(201,168,76,0.1);padding:40px 48px;display:flex;
   <div class="admin-access-card" id="admin-access-card">
     <div class="admin-access-top">
       <div class="admin-access-summary">
-        <div class="admin-access-label">Staff Admin Access</div>
+        <div class="admin-access-label">Employee Login</div>
         <h2 class="admin-access-title">Backend entry</h2>
-        <p class="admin-access-copy">Restricted Valuna staff access only. Approved emails: owner/backend access and customer support operations.</p>
+        <p class="admin-access-copy">Restricted Valuna employee access only. Approved emails: owner/backend access and customer support operations.</p>
       </div>
-      <button type="button" class="admin-access-toggle" id="admin-access-toggle">Admin Login</button>
+      <button type="button" class="admin-access-toggle" id="admin-access-toggle">Employee Login</button>
     </div>
     <div class="admin-access-panel" id="admin-access-panel">
       <form class="admin-access-form" id="admin-access-form" autocomplete="off">
@@ -2883,7 +2883,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
   if(toggle && card){
     toggle.addEventListener('click',function(){
       card.classList.toggle('open');
-      toggle.textContent=card.classList.contains('open') ? 'Close' : 'Admin Login';
+      toggle.textContent=card.classList.contains('open') ? 'Close' : 'Employee Login';
     });
   }
 
@@ -2893,7 +2893,7 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
       var email=cleanEmail();
       var password=getPassword();
       if(!isApprovedStaffEmail(email)){
-        setAdminAccessStatus('err','Admin access is restricted to approved Valuna staff emails only.');
+        setAdminAccessStatus('err','Employee access is restricted to approved Valuna staff emails only.');
         return;
       }
       if(!password){
@@ -2910,11 +2910,11 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
       sb.auth.signInWithPassword({ email:email, password:password })
         .then(function(result){
           if(result.error) throw result.error;
-          setAdminAccessStatus('ok','Staff access confirmed. Opening backend...');
+          setAdminAccessStatus('ok','Employee access confirmed. Opening backend...');
           window.location.href=getAdminRedirect();
         })
         .catch(function(err){
-          var msg = err && err.message ? err.message : 'Admin sign in failed.';
+          var msg = err && err.message ? err.message : 'Employee sign in failed.';
           if(String(msg).toLowerCase().indexOf('invalid login credentials') !== -1){
             msg='Invalid email or password. If this is your first time signing in, use Create / Reset Password and check the staff inbox before trying again.';
           }
@@ -3008,4 +3008,6 @@ window.VALUNA_SUPABASE_ANON_KEY = window.VALUNA_SUPABASE_ANON_KEY || 'eyJhbGciOi
 <!-- Build: index-63_STAFF_ADMIN_SUPABASE_CDN_FIX -->
 
 <!-- Build: index-64_STAFF_ADMIN_PASSWORD_COPY_RESET_FIX -->
+
+<!-- Build: index-65_EMPLOYEE_LOGIN_LABEL -->
 </html>
