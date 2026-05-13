@@ -520,7 +520,7 @@ tr:last-child td{border-bottom:none;}
   <div class="nav-actions">
     <a class="btn" href="index.html">Public Site</a>
     <a class="btn" href="marketplace.html">Marketplace</a>
-    <button class="btn red hidden" id="signout-btn" onclick="signOut()">Sign Out</button>
+    <button class="btn red hidden" id="signout-btn" onclick="signOut(event)">Sign Out</button>
   </div>
 </nav>
 
@@ -552,7 +552,7 @@ tr:last-child td{border-bottom:none;}
     <div class="auth-sub">
       This Valuna email is signed in, but it is not currently listed as an approved admin. Request access from the public Valuna homepage and wait for manual approval.
     </div>
-    <button class="btn red" onclick="signOut()">Sign Out</button>
+    <button class="btn red" onclick="signOut(event)">Sign Out</button>
   </section>
 
   <section id="admin-view" class="hidden">
@@ -949,9 +949,46 @@ async function checkAdminAccess() {
   else showDenied();
 }
 
-async function signOut() {
-  await sb.auth.signOut();
+async function signOut(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  if (event && event.stopPropagation) event.stopPropagation();
+
+  var btn = document.getElementById('signout-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Signing Out...';
+  }
+
+  try {
+    if (sb && sb.auth) {
+      await sb.auth.signOut({ scope: 'local' });
+    }
+  } catch(e) {
+    console.warn('Admin sign out failed, clearing local session anyway:', e);
+  }
+
+  try {
+    currentUser = null;
+    approvedAdmin = false;
+
+    // Clear Supabase browser auth storage for this project. This keeps sign-out working
+    // even if the hosted auth request fails or the session listener does not fire.
+    Object.keys(localStorage || {}).forEach(function(key) {
+      if (key.indexOf('supabase') !== -1 || key.indexOf('sb-') === 0 || key.indexOf('waktwmwhxrbttvgvkbnk') !== -1) {
+        localStorage.removeItem(key);
+      }
+    });
+    Object.keys(sessionStorage || {}).forEach(function(key) {
+      if (key.indexOf('supabase') !== -1 || key.indexOf('sb-') === 0 || key.indexOf('waktwmwhxrbttvgvkbnk') !== -1) {
+        sessionStorage.removeItem(key);
+      }
+    });
+  } catch(e) {
+    console.warn('Admin sign out storage cleanup skipped:', e);
+  }
+
   showAuth();
+  window.location.href = 'index.html?admin_signed_out=1';
 }
 
 function switchTab(btn,id) {
@@ -1832,4 +1869,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-06_ORDER_OPERATIONS_LOGIN_SYNTAX_FIX -->
 
 <!-- Build: admin-07_SPLIT_MARKETPLACE_AND_SHOP_ORDERS -->
+
+<!-- Build: admin-08_SIGN_OUT_FIX -->
 </html>
