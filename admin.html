@@ -79,6 +79,181 @@ tr:last-child td{border-bottom:none;}
   .nav-actions{gap:6px;}
   .btn{padding:9px 12px;font-size:12px;}
 }
+
+/* ─────────────────────────────────────────────
+   SHOP PRODUCT CONTROL — DIRECT FROM VALUNA
+───────────────────────────────────────────── */
+.shop-admin-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:14px;
+}
+.shop-admin-copy{
+  color:#a8a2b8;
+  font-size:14px;
+  line-height:1.65;
+  max-width:760px;
+}
+.shop-admin-form{
+  display:none;
+  background:#0a0810;
+  border:1px solid rgba(201,168,76,.18);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+}
+.shop-admin-form.open{display:block;}
+.shop-form-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.shop-form-grid.two{grid-template-columns:repeat(2,1fr);}
+.shop-form-grid.three{grid-template-columns:repeat(3,1fr);}
+.shop-form-full{grid-column:1/-1;}
+.shop-check-row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.shop-check{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:10px;
+  padding:10px 12px;
+  color:#c8c2ae;
+  font-size:13px;
+}
+.shop-check input{accent-color:#c9a84c;}
+.shop-image-preview{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.shop-image-preview img{
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  background:#06080f;
+  border:1px solid #1a1230;
+  border-radius:8px;
+}
+.shop-admin-toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.shop-admin-small{
+  font-size:12px;
+  color:#6b6b6b;
+  line-height:1.55;
+}
+.shop-admin-pill{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:1px solid rgba(201,168,76,.22);
+  color:#c9a84c;
+  background:rgba(201,168,76,.06);
+}
+.shop-admin-pill.green{
+  color:#2a9d6a;
+  border-color:rgba(42,157,106,.25);
+  background:rgba(42,157,106,.08);
+}
+.shop-admin-pill.red{
+  color:#e05252;
+  border-color:rgba(224,82,82,.25);
+  background:rgba(224,82,82,.08);
+}
+.shop-admin-pill.purple{
+  color:#a855f7;
+  border-color:rgba(168,85,247,.25);
+  background:rgba(168,85,247,.08);
+}
+.shop-products-list{
+  display:grid;
+  gap:12px;
+}
+.shop-product-row{
+  background:#0a0810;
+  border:1px solid #1a1230;
+  border-radius:16px;
+  padding:14px;
+  display:grid;
+  grid-template-columns:74px 1fr auto;
+  gap:14px;
+  align-items:center;
+}
+.shop-product-thumb{
+  width:74px;
+  height:74px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#06080f;
+  border:1px solid #1a1230;
+}
+.shop-product-thumb.ph{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  color:#6b6b6b;
+}
+.shop-product-admin-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:18px;
+  color:#f2ecd8;
+  line-height:1.2;
+}
+.shop-product-admin-meta{
+  font-size:13px;
+  color:#9b96ae;
+  line-height:1.6;
+  margin-top:4px;
+}
+.shop-product-admin-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.shop-product-admin-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+@media(max-width:980px){
+  .shop-form-grid,
+  .shop-form-grid.two,
+  .shop-form-grid.three{grid-template-columns:1fr 1fr;}
+  .shop-product-row{grid-template-columns:58px 1fr;}
+  .shop-product-admin-actions{grid-column:1/-1;justify-content:flex-start;}
+}
+@media(max-width:620px){
+  .shop-admin-head{display:block;}
+  .shop-admin-toolbar{margin-top:12px;}
+  .shop-form-grid,
+  .shop-form-grid.two,
+  .shop-form-grid.three{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -176,12 +351,176 @@ tr:last-child td{border-bottom:none;}
       </table></div>
     </div>
 
+
     <div class="panel" id="panel-products">
-      <div class="table-wrap"><table>
-        <thead><tr><th>Product</th><th>SKU</th><th>Game</th><th>Price</th><th>Stock</th><th>Active</th></tr></thead>
-        <tbody id="products-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
-      </table></div>
+      <div class="shop-admin-head">
+        <div>
+          <div class="kicker">Direct From Valuna</div>
+          <h2 class="dash-heading" style="margin-bottom:6px;">Shop Product Control</h2>
+          <div class="shop-admin-copy">
+            Manage Valuna-owned shop stock separately from marketplace seller listings. Products created here are direct Valuna stock and can be prepared for AusPost fulfilment later.
+          </div>
+        </div>
+        <div class="shop-admin-toolbar">
+          <button class="btn gold" onclick="openShopProductForm()">Add Product</button>
+          <button class="btn" onclick="loadProducts()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="shop-admin-form" id="shop-product-form-card">
+        <input type="hidden" id="shop-product-id">
+
+        <div class="shop-form-grid">
+          <div class="shop-form-full">
+            <label>Product name</label>
+            <input class="input" id="shop-name" placeholder="Pokemon Perfect Order Booster Box">
+          </div>
+
+          <div>
+            <label>SKU</label>
+            <input class="input" id="shop-sku" placeholder="VAL-PO-BB-001">
+          </div>
+
+          <div>
+            <label>Game</label>
+            <select class="select" id="shop-game">
+              <option value="pokemon">Pokémon</option>
+              <option value="onepiece">One Piece</option>
+              <option value="lorcana">Lorcana</option>
+              <option value="yugioh">Yu-Gi-Oh!</option>
+              <option value="mtg">Magic</option>
+              <option value="accessories">Accessories</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Language</label>
+            <select class="select" id="shop-language">
+              <option value="english">English</option>
+              <option value="japanese">Japanese</option>
+              <option value="multi">Multi</option>
+              <option value="none">Not applicable</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Category</label>
+            <select class="select" id="shop-category">
+              <option value="booster-box">Booster Box</option>
+              <option value="elite-trainer-box">Elite Trainer Box</option>
+              <option value="booster-bundle">Booster Bundle</option>
+              <option value="collection-box">Collection Box</option>
+              <option value="single-pack">Single Pack</option>
+              <option value="accessory">Accessory</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Price AUD</label>
+            <input class="input" id="shop-price" type="number" min="0" step="0.01" placeholder="0.00">
+          </div>
+
+          <div>
+            <label>Compare price</label>
+            <input class="input" id="shop-compare-price" type="number" min="0" step="0.01" placeholder="Optional">
+          </div>
+
+          <div>
+            <label>Stock qty</label>
+            <input class="input" id="shop-stock" type="number" min="0" step="1" placeholder="0">
+          </div>
+
+          <div>
+            <label>Weight grams</label>
+            <input class="input" id="shop-weight" type="number" min="0" step="1" placeholder="AusPost ready">
+          </div>
+
+          <div class="shop-form-full">
+            <label>Description</label>
+            <textarea id="shop-description" rows="3" placeholder="Short customer-facing product description"></textarea>
+          </div>
+        </div>
+
+        <div class="kicker" style="margin-top:18px;">AusPost Fulfilment Prep</div>
+        <div class="shop-form-grid">
+          <div>
+            <label>Fulfilment type</label>
+            <select class="select" id="shop-fulfilment-type">
+              <option value="direct_from_valuna">Direct from Valuna</option>
+            </select>
+          </div>
+          <div>
+            <label>Shipping profile</label>
+            <select class="select" id="shop-shipping-profile">
+              <option value="standard_parcel">Standard Parcel</option>
+              <option value="small_parcel">Small Parcel</option>
+              <option value="medium_parcel">Medium Parcel</option>
+              <option value="large_parcel">Large Parcel</option>
+              <option value="letter_tracked">Tracked Letter</option>
+            </select>
+          </div>
+          <div>
+            <label>Origin</label>
+            <select class="select" id="shop-shipping-origin">
+              <option value="valuna_newcastle">Valuna Newcastle</option>
+            </select>
+          </div>
+          <div>
+            <label>Handling days</label>
+            <input class="input" id="shop-handling-days" type="number" min="0" step="1" value="1">
+          </div>
+          <div>
+            <label>Length cm</label>
+            <input class="input" id="shop-length" type="number" min="0" step="0.1">
+          </div>
+          <div>
+            <label>Width cm</label>
+            <input class="input" id="shop-width" type="number" min="0" step="0.1">
+          </div>
+          <div>
+            <label>Height cm</label>
+            <input class="input" id="shop-height" type="number" min="0" step="0.1">
+          </div>
+          <div>
+            <label>Shipping note</label>
+            <input class="input" id="shop-shipping-note" placeholder="Optional internal note">
+          </div>
+        </div>
+
+        <div class="shop-check-row">
+          <label class="shop-check"><input id="shop-active" type="checkbox" checked> Active in shop</label>
+          <label class="shop-check"><input id="shop-featured" type="checkbox"> Featured</label>
+          <label class="shop-check"><input id="shop-auspost-enabled" type="checkbox" checked> AusPost ready</label>
+          <label class="shop-check"><input id="shop-signature" type="checkbox" checked> Signature required</label>
+        </div>
+
+        <div class="kicker" style="margin-top:18px;">Product Images</div>
+        <div class="shop-form-grid two">
+          <div>
+            <label>Image URLs</label>
+            <textarea id="shop-image-urls" rows="4" placeholder="One image URL per line"></textarea>
+            <div class="shop-admin-small">Existing image URLs are preserved here. Uploading files will add new URLs.</div>
+          </div>
+          <div>
+            <label>Upload images</label>
+            <input class="input" id="shop-image-files" type="file" accept="image/*" multiple>
+            <div class="shop-image-preview" id="shop-image-preview"></div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:16px;">
+          <button class="btn gold" id="shop-save-btn" onclick="saveShopProduct()">Save Product</button>
+          <button class="btn" onclick="resetShopProductForm()">Cancel</button>
+        </div>
+        <div class="notice" id="shop-admin-status"></div>
+      </div>
+
+      <div id="products-body">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
     </div>
+
 
     <div class="footer-note">Admin page v0.1. Marketplace extraction has started. Do not remove the old marketplace admin section until this page is fully tested.</div>
   </section>
@@ -468,23 +807,337 @@ async function loadApprovedAdmins() {
   }
 }
 
+
 async function loadProducts() {
   try {
-    const rows = await rpc('admin_get_shop_products');
-    const body=document.getElementById('products-body');
-    if (!rows || !rows.length) {
-      body.innerHTML='<tr><td colspan="6"><div class="empty">No shop products loaded</div></td></tr>';
-      return;
-    }
-    body.innerHTML=rows.map(function(p){
-      return '<tr><td><strong>'+esc(p.name || 'Untitled')+'</strong></td><td>'+esc(p.sku || '—')+'</td><td>'+esc(p.game || '—')+'</td><td>'+money(p.price)+'</td><td>'+esc(p.stock_qty == null ? '—' : p.stock_qty)+'</td><td>'+(p.is_active?'Yes':'No')+'</td></tr>';
-    }).join('');
+    var container = document.getElementById('products-body');
+    if (container) container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+    const { data, error } = await sb
+      .from('shop_products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    renderShopProducts(data || []);
   } catch(e) {
-    document.getElementById('products-body').innerHTML='<tr><td colspan="6">Could not load shop products: '+esc(e.message)+'</td></tr>';
+    var container = document.getElementById('products-body');
+    if (container) container.innerHTML = '<div class="empty">Could not load shop products: '+esc(e.message)+'</div>';
   }
 }
+
+function shopImagesArray(product) {
+  if (!product || !product.images) return [];
+  if (Array.isArray(product.images)) return product.images.filter(Boolean);
+  if (typeof product.images === 'string') {
+    try {
+      var parsed = JSON.parse(product.images);
+      if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    } catch(e) {}
+    return product.images.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+  }
+  return [];
+}
+
+function renderShopProducts(rows) {
+  var container = document.getElementById('products-body');
+  if (!container) return;
+
+  if (!rows.length) {
+    container.innerHTML = '<div class="empty">No shop products yet. Add direct-from-Valuna stock to begin.</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="shop-products-list">' + rows.map(function(p) {
+    var imgs = shopImagesArray(p);
+    var thumb = imgs[0]
+      ? '<img class="shop-product-thumb" src="'+esc(imgs[0])+'" alt="">'
+      : '<div class="shop-product-thumb ph">📦</div>';
+
+    var status = p.is_active
+      ? '<span class="shop-admin-pill green">Active</span>'
+      : '<span class="shop-admin-pill red">Hidden</span>';
+
+    var featured = p.featured
+      ? '<span class="shop-admin-pill">Featured</span>'
+      : '';
+
+    var auspost = p.auspost_enabled === false
+      ? '<span class="shop-admin-pill red">AusPost off</span>'
+      : '<span class="shop-admin-pill purple">AusPost ready</span>';
+
+    var fulfilment = '<span class="shop-admin-pill">Direct from Valuna</span>';
+
+    return '<div class="shop-product-row">' +
+      thumb +
+      '<div>' +
+        '<div class="shop-product-admin-title">'+esc(p.name || 'Untitled product')+'</div>' +
+        '<div class="shop-product-admin-meta">' +
+          'A$'+esc(p.price || '0')+' · Stock: '+esc(p.stock_qty == null ? '0' : p.stock_qty)+' · SKU: '+esc(p.sku || '—')+'<br>' +
+          esc(p.game || '—')+' · '+esc(p.language || '—')+' · '+esc(p.category || '—')+' · Weight: '+esc(p.weight_grams || '—')+'g' +
+        '</div>' +
+        '<div class="shop-product-admin-tags">'+status+featured+auspost+fulfilment+'</div>' +
+      '</div>' +
+      '<div class="shop-product-admin-actions">' +
+        '<button class="btn" onclick="editShopProductById(\''+esc(p.id)+'\')">Edit</button>' +
+        '<button class="btn" onclick="toggleShopProductActive(\''+esc(p.id)+'\','+(p.is_active ? 'false' : 'true')+')">'+(p.is_active ? 'Hide' : 'Show')+'</button>' +
+        '<button class="btn" onclick="toggleShopProductFeatured(\''+esc(p.id)+'\','+(p.featured ? 'false' : 'true')+')">'+(p.featured ? 'Unfeature' : 'Feature')+'</button>' +
+        '<button class="btn red" onclick="deleteShopProduct(\''+esc(p.id)+'\',\''+esc((p.name || '').replace(/'/g, "\\'"))+'\')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') + '</div>';
+
+  window.__valunaShopProducts = rows;
+}
+
+function setShopAdminStatus(type,msg) {
+  var box = document.getElementById('shop-admin-status');
+  if (!box) return;
+  box.className = 'notice ' + (type === 'ok' ? 'ok' : 'err');
+  box.textContent = msg;
+}
+
+function openShopProductForm() {
+  resetShopProductForm(false);
+  var card = document.getElementById('shop-product-form-card');
+  if (card) card.classList.add('open');
+  var name = document.getElementById('shop-name');
+  if (name) name.focus();
+}
+
+function resetShopProductForm(close) {
+  var ids = [
+    'shop-product-id','shop-name','shop-sku','shop-price','shop-compare-price','shop-stock','shop-weight',
+    'shop-description','shop-length','shop-width','shop-height','shop-shipping-note','shop-image-urls'
+  ];
+  ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+
+  var defaults = {
+    'shop-game':'pokemon',
+    'shop-language':'english',
+    'shop-category':'booster-box',
+    'shop-fulfilment-type':'direct_from_valuna',
+    'shop-shipping-profile':'standard_parcel',
+    'shop-shipping-origin':'valuna_newcastle'
+  };
+  Object.keys(defaults).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=defaults[id]; });
+
+  var handling=document.getElementById('shop-handling-days'); if(handling) handling.value='1';
+  var active=document.getElementById('shop-active'); if(active) active.checked=true;
+  var featured=document.getElementById('shop-featured'); if(featured) featured.checked=false;
+  var auspost=document.getElementById('shop-auspost-enabled'); if(auspost) auspost.checked=true;
+  var sig=document.getElementById('shop-signature'); if(sig) sig.checked=true;
+  var files=document.getElementById('shop-image-files'); if(files) files.value='';
+  var preview=document.getElementById('shop-image-preview'); if(preview) preview.innerHTML='';
+  var save=document.getElementById('shop-save-btn'); if(save) save.textContent='Save Product';
+  var status=document.getElementById('shop-admin-status'); if(status) status.className='notice';
+
+  if (close !== false) {
+    var card = document.getElementById('shop-product-form-card');
+    if (card) card.classList.remove('open');
+  }
+}
+
+function editShopProductById(id) {
+  var rows = window.__valunaShopProducts || [];
+  var p = rows.find(function(x){ return String(x.id) === String(id); });
+  if (!p) return;
+
+  var card = document.getElementById('shop-product-form-card');
+  if (card) card.classList.add('open');
+
+  function val(id,value){ var el=document.getElementById(id); if(el) el.value = value == null ? '' : value; }
+  function chk(id,value){ var el=document.getElementById(id); if(el) el.checked = !!value; }
+
+  val('shop-product-id', p.id);
+  val('shop-name', p.name);
+  val('shop-sku', p.sku);
+  val('shop-game', p.game || 'pokemon');
+  val('shop-language', p.language || 'english');
+  val('shop-category', p.category || 'booster-box');
+  val('shop-price', p.price);
+  val('shop-compare-price', p.compare_price);
+  val('shop-stock', p.stock_qty);
+  val('shop-weight', p.weight_grams);
+  val('shop-description', p.description);
+  val('shop-fulfilment-type', p.shop_fulfilment_type || 'direct_from_valuna');
+  val('shop-shipping-profile', p.shipping_profile || 'standard_parcel');
+  val('shop-shipping-origin', p.shipping_origin || 'valuna_newcastle');
+  val('shop-handling-days', p.handling_days == null ? 1 : p.handling_days);
+  val('shop-length', p.package_length_cm);
+  val('shop-width', p.package_width_cm);
+  val('shop-height', p.package_height_cm);
+  val('shop-shipping-note', p.product_status_notes);
+  val('shop-image-urls', shopImagesArray(p).join('\n'));
+
+  chk('shop-active', p.is_active !== false);
+  chk('shop-featured', p.featured);
+  chk('shop-auspost-enabled', p.auspost_enabled !== false);
+  chk('shop-signature', p.requires_signature !== false);
+
+  var save=document.getElementById('shop-save-btn'); if(save) save.textContent='Update Product';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getInputValue(id) {
+  var el = document.getElementById(id);
+  return el ? String(el.value || '').trim() : '';
+}
+
+function getNumberValue(id, fallback) {
+  var v = getInputValue(id);
+  if (v === '') return fallback == null ? null : fallback;
+  var n = Number(v);
+  return isNaN(n) ? (fallback == null ? null : fallback) : n;
+}
+
+function getCheckValue(id) {
+  var el = document.getElementById(id);
+  return !!(el && el.checked);
+}
+
+async function uploadShopImages() {
+  var files = document.getElementById('shop-image-files');
+  if (!files || !files.files || !files.files.length) return [];
+
+  var urls = [];
+  for (var i=0;i<files.files.length;i++) {
+    var file = files.files[i];
+    var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    var safe = file.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+    var path = 'products/' + Date.now() + '-' + i + '-' + safe + '.' + ext;
+
+    var upload = await sb.storage.from('shop-images').upload(path, file, {
+      upsert: true,
+      cacheControl: '3600'
+    });
+
+    if (upload.error) throw upload.error;
+
+    var publicUrl = sb.storage.from('shop-images').getPublicUrl(path);
+    if (publicUrl && publicUrl.data && publicUrl.data.publicUrl) {
+      urls.push(publicUrl.data.publicUrl);
+    }
+  }
+  return urls;
+}
+
+async function saveShopProduct() {
+  try {
+    var id = getInputValue('shop-product-id');
+    var name = getInputValue('shop-name');
+    if (!name) return setShopAdminStatus('err','Product name is required.');
+
+    var price = getNumberValue('shop-price', null);
+    if (price == null || price <= 0) return setShopAdminStatus('err','Enter a valid product price.');
+
+    var stock = getNumberValue('shop-stock', 0);
+    if (stock == null || stock < 0) return setShopAdminStatus('err','Enter a valid stock quantity.');
+
+    setShopAdminStatus('ok','Saving product...');
+
+    var existingUrls = getInputValue('shop-image-urls')
+      .split('\n')
+      .map(function(x){ return x.trim(); })
+      .filter(Boolean);
+
+    var uploadedUrls = await uploadShopImages();
+    var images = existingUrls.concat(uploadedUrls);
+
+    var payload = {
+      name: name,
+      sku: getInputValue('shop-sku') || null,
+      game: getInputValue('shop-game') || 'pokemon',
+      language: getInputValue('shop-language') || 'english',
+      category: getInputValue('shop-category') || 'booster-box',
+      price: price,
+      compare_price: getNumberValue('shop-compare-price', null),
+      stock_qty: stock,
+      weight_grams: getNumberValue('shop-weight', null),
+      description: getInputValue('shop-description') || null,
+      images: images,
+      featured: getCheckValue('shop-featured'),
+      is_active: getCheckValue('shop-active'),
+      shop_fulfilment_type: getInputValue('shop-fulfilment-type') || 'direct_from_valuna',
+      auspost_enabled: getCheckValue('shop-auspost-enabled'),
+      shipping_profile: getInputValue('shop-shipping-profile') || 'standard_parcel',
+      shipping_origin: getInputValue('shop-shipping-origin') || 'valuna_newcastle',
+      handling_days: getNumberValue('shop-handling-days', 1),
+      package_length_cm: getNumberValue('shop-length', null),
+      package_width_cm: getNumberValue('shop-width', null),
+      package_height_cm: getNumberValue('shop-height', null),
+      requires_signature: getCheckValue('shop-signature'),
+      product_status_notes: getInputValue('shop-shipping-note') || null,
+      updated_at: new Date().toISOString()
+    };
+
+    var result;
+    if (id) {
+      result = await sb.from('shop_products').update(payload).eq('id', id);
+    } else {
+      payload.created_at = new Date().toISOString();
+      result = await sb.from('shop_products').insert(payload);
+    }
+
+    if (result.error) throw result.error;
+
+    setShopAdminStatus('ok', id ? 'Product updated.' : 'Product added.');
+    resetShopProductForm(true);
+    await loadProducts();
+  } catch(e) {
+    console.error('Shop product save failed:', e);
+    setShopAdminStatus('err', e.message || 'Product could not be saved.');
+  }
+}
+
+async function toggleShopProductActive(id, nextValue) {
+  try {
+    const { error } = await sb.from('shop_products').update({ is_active: nextValue, updated_at: new Date().toISOString() }).eq('id', id);
+    if (error) throw error;
+    await loadProducts();
+  } catch(e) {
+    alert('Could not update product visibility: ' + e.message);
+  }
+}
+
+async function toggleShopProductFeatured(id, nextValue) {
+  try {
+    const { error } = await sb.from('shop_products').update({ featured: nextValue, updated_at: new Date().toISOString() }).eq('id', id);
+    if (error) throw error;
+    await loadProducts();
+  } catch(e) {
+    alert('Could not update featured status: ' + e.message);
+  }
+}
+
+async function deleteShopProduct(id, name) {
+  if (!confirm('Delete '+(name || 'this product')+'? This cannot be undone.')) return;
+  try {
+    const { error } = await sb.from('shop_products').delete().eq('id', id);
+    if (error) throw error;
+    await loadProducts();
+  } catch(e) {
+    alert('Could not delete product: ' + e.message);
+  }
+}
+
+document.addEventListener('change', function(e) {
+  if (!e.target || e.target.id !== 'shop-image-files') return;
+  var preview = document.getElementById('shop-image-preview');
+  if (!preview) return;
+  preview.innerHTML = '';
+  Array.from(e.target.files || []).forEach(function(file) {
+    var img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    preview.appendChild(img);
+  });
+});
+
 </script>
 </body>
 
 <!-- Build: admin-02_STAFF_BACKEND_ENTRY_ONLY -->
+
+<!-- Build: admin-03_SHOP_PRODUCT_CONTROL_AUSPOST_READY -->
 </html>
