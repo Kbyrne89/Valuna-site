@@ -695,6 +695,63 @@ tr:last-child td{border-bottom:none;}
   .auspost-leg-actions{justify-content:flex-start;margin-top:8px;}
 }
 
+
+/* ─────────────────────────────────────────────
+   SELLER INTAKE QR / LABEL — MYPOST BUSINESS MVP
+───────────────────────────────────────────── */
+.seller-intake-section-title{
+  margin-top:18px;
+}
+.seller-intake-panel{
+  background:#0f0a1a;
+  border:1px solid rgba(201,168,76,.16);
+  border-radius:14px;
+  padding:14px;
+  margin-top:10px;
+}
+.seller-intake-panel .helper{
+  color:#9b96ae;
+  font-size:12px;
+  line-height:1.55;
+  margin-top:4px;
+}
+.seller-intake-preview{
+  width:100%;
+  min-height:170px;
+  resize:vertical;
+  font-size:13px;
+  line-height:1.55;
+  color:#c8c2ae;
+}
+.seller-intake-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.seller-intake-pill{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:1px solid rgba(201,168,76,.22);
+  color:#c9a84c;
+  background:rgba(201,168,76,.06);
+  margin-right:4px;
+}
+.seller-intake-pill.green{color:#2a9d6a;border-color:rgba(42,157,106,.25);background:rgba(42,157,106,.08);}
+.seller-intake-pill.red{color:#e05252;border-color:rgba(224,82,82,.25);background:rgba(224,82,82,.08);}
+.seller-intake-mini-note{
+  margin-top:8px;
+  color:#6b6b6b;
+  font-size:12px;
+  line-height:1.55;
+}
+
 </style>
 </head>
 <body>
@@ -959,6 +1016,94 @@ tr:last-child td{border-bottom:none;}
               <input class="input" id="auspost-internal-note" placeholder="Example: seller no-printer QR required, fragile card mailer, signature required">
             </div>
           </div>
+
+          <div class="kicker seller-intake-section-title">Seller Intake QR / Label</div>
+          <div class="seller-intake-panel">
+            <input type="hidden" id="seller-intake-card-name">
+            <div class="auspost-form-grid">
+              <div>
+                <label for="seller-intake-email">Seller Email</label>
+                <input class="input" id="seller-intake-email" type="email" inputmode="email" placeholder="seller@email.com" autocomplete="off">
+              </div>
+              <div>
+                <label for="seller-intake-name">Seller Name</label>
+                <input class="input" id="seller-intake-name" placeholder="Optional">
+              </div>
+              <div>
+                <label for="seller-intake-phone">Seller Phone</label>
+                <input class="input" id="seller-intake-phone" placeholder="Optional">
+              </div>
+              <div>
+                <label for="seller-intake-label-type">Label Type</label>
+                <select class="select" id="seller-intake-label-type">
+                  <option value="qr_code">Post Office QR Code</option>
+                  <option value="printable_label">Printable Label PDF</option>
+                  <option value="both">QR + Printable Label</option>
+                  <option value="manual">Manual / Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="seller-intake-address1">Sender Address</label>
+                <input class="input" id="seller-intake-address1" placeholder="Street address used in MyPost">
+              </div>
+              <div>
+                <label for="seller-intake-suburb">Suburb</label>
+                <input class="input" id="seller-intake-suburb" placeholder="Seller suburb">
+              </div>
+              <div>
+                <label for="seller-intake-state">State</label>
+                <select class="select" id="seller-intake-state">
+                  <option value="">Select</option>
+                  <option value="ACT">ACT</option>
+                  <option value="NSW">NSW</option>
+                  <option value="NT">NT</option>
+                  <option value="QLD">QLD</option>
+                  <option value="SA">SA</option>
+                  <option value="TAS">TAS</option>
+                  <option value="VIC">VIC</option>
+                  <option value="WA">WA</option>
+                </select>
+              </div>
+              <div>
+                <label for="seller-intake-postcode">Postcode</label>
+                <input class="input" id="seller-intake-postcode" inputmode="numeric" placeholder="0000">
+              </div>
+              <div>
+                <label for="seller-intake-qr-url">QR Code URL</label>
+                <input class="input" id="seller-intake-qr-url" placeholder="Paste MyPost QR/link if available">
+              </div>
+              <div>
+                <label for="seller-intake-qr-expires">QR Expires</label>
+                <input class="input" id="seller-intake-qr-expires" type="datetime-local">
+              </div>
+              <div>
+                <label for="seller-intake-email-status">Seller Email Status</label>
+                <select class="select" id="seller-intake-email-status">
+                  <option value="not_ready">Not Ready</option>
+                  <option value="ready_to_send">Ready To Send</option>
+                  <option value="sent">Sent</option>
+                  <option value="resent">Resent</option>
+                  <option value="issue">Issue</option>
+                </select>
+              </div>
+              <div>
+                <label for="seller-intake-lodged-at">Seller Lodged At</label>
+                <input class="input" id="seller-intake-lodged-at" type="datetime-local">
+              </div>
+              <div class="full">
+                <label for="seller-intake-email-preview">Seller Email Preview</label>
+                <textarea class="seller-intake-preview" id="seller-intake-email-preview" readonly></textarea>
+                <div class="helper">For beta, copy this into hello@valuna.app and attach/paste the MyPost QR code or label. Later this button can be wired to an email Edge Function.</div>
+              </div>
+            </div>
+            <div class="seller-intake-actions">
+              <button class="btn" onclick="copySellerIntakeEmail()">Copy Seller Email</button>
+              <button class="btn gold" onclick="markSellerIntakeEmailSentFromForm()">Mark QR Email Sent</button>
+              <button class="btn green" onclick="markSellerLodgedFromForm()">Mark Seller Lodged</button>
+            </div>
+            <div class="seller-intake-mini-note">Buyer delivery details stay private. Seller intake is only Seller → Valuna. Do not paste buyer delivery details into this section.</div>
+          </div>
+
           <div class="actions" style="margin-top:14px;">
             <button class="btn gold" onclick="saveAuspostShipment()">Save Shipping Record</button>
             <button class="btn" onclick="clearAuspostForm()">Clear</button>
@@ -1153,7 +1298,7 @@ tr:last-child td{border-bottom:none;}
     </div>
 
 
-    <div class="footer-note">Admin page v0.2. Beta access controls added. Preserve split marketplace/shop operations and test RPCs before opening waved beta entry.</div>
+    <div class="footer-note">Admin page v0.3. Seller intake QR/label flow added for MyPost Business MVP. Preserve split marketplace/shop operations and buyer privacy.</div>
   </section>
 </div>
 </div>
@@ -1510,7 +1655,7 @@ function renderOrders(rows) {
         '<div class="ops-panel"><div class="ops-panel-title">Valuna internal action</div><div class="ops-panel-body">'+opsInternalInstruction(o.status)+'</div></div>'+
       '</div>'+
 
-      auspostOrderBlock(o.id, 'marketplace', ['seller_to_valuna','valuna_to_buyer'])+
+      auspostOrderBlock(o.id, 'marketplace', ['seller_to_valuna','valuna_to_buyer'], o)+
 
       nextOpsActions(o)+
 
@@ -1699,7 +1844,7 @@ function renderShopOrders(rows) {
         '<div class="ops-panel"><div class="ops-panel-title">Shop fulfilment</div><div class="ops-panel-body">'+shopInternalInstruction(status)+'</div></div>'+
         '<div class="ops-panel"><div class="ops-panel-title">AusPost foundation</div><div class="ops-panel-body">Use this flow for packing and dispatch. AusPost label/tracking connection can plug into Ready to Dispatch later.</div></div>'+
       '</div>'+
-      auspostOrderBlock(o.id, 'shop', ['valuna_to_buyer'])+
+      auspostOrderBlock(o.id, 'shop', ['valuna_to_buyer'], o)+
       shopNextActions(o)+
       '<div class="ops-status-row">'+
         '<select class="status-select" id="shop-st-'+esc(o.id)+'">'+options+'</select>'+
@@ -1974,32 +2119,114 @@ function auspostStatusClass(status) {
   return 'auspost-pill';
 }
 
+function auspostValueOrBlank(v) {
+  return v == null ? '' : String(v);
+}
+
+function htmlArg(v) {
+  return esc(auspostValueOrBlank(v));
+}
+
+function encodedArg(v) {
+  return encodeURIComponent(auspostValueOrBlank(v));
+}
+
+function decodeArg(v) {
+  try { return decodeURIComponent(v || ''); } catch(e) { return v || ''; }
+}
+
+function orderSellerEmail(o) {
+  return auspostValueOrBlank(o && (o.seller_email || o.sellerEmail || o.seller_contact_email || o.seller_username || ''));
+}
+
+function orderSellerName(o) {
+  return auspostValueOrBlank(o && (o.seller_name || o.seller_full_name || o.seller_username || ''));
+}
+
+function orderCardName(o) {
+  return auspostValueOrBlank(o && (o.card_name || o.title || ''));
+}
+
+function localDateTimeValue(v) {
+  if (!v) return '';
+  try {
+    var d = new Date(v);
+    if (isNaN(d.getTime())) return '';
+    var tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString().slice(0,16);
+  } catch(e) { return ''; }
+}
+
+function sellerEmailStatusLabel(status) {
+  const map = {
+    not_ready:'Not Ready',
+    ready_to_send:'Ready To Send',
+    sent:'Sent',
+    resent:'Resent',
+    issue:'Issue'
+  };
+  return map[status] || status || 'Not Ready';
+}
+
+function sellerEmailStatusClass(status) {
+  if (['sent','resent'].includes(status)) return 'seller-intake-pill green';
+  if (status === 'issue') return 'seller-intake-pill red';
+  return 'seller-intake-pill';
+}
+
 function findAuspostShipment(orderId, orderType, leg) {
   return (cachedAuspostShipments || []).find(function(s) {
     return String(s.order_id) === String(orderId) && String(s.order_type) === String(orderType) && String(s.leg) === String(leg);
   });
 }
 
-function auspostOrderBlock(orderId, orderType, legs) {
+function auspostOrderBlock(orderId, orderType, legs, order) {
   if (!orderId) return '';
+  var sellerEmail = orderSellerEmail(order);
+  var sellerName = orderSellerName(order);
+  var cardName = orderCardName(order);
+
   var rows = (legs || []).map(function(leg) {
     var rec = findAuspostShipment(orderId, orderType, leg);
+    var statusBits = [];
+    if (rec) {
+      statusBits.push('<span class="'+auspostStatusClass(rec.status)+'">'+auspostStatusLabel(rec.status)+'</span>');
+      if (rec.tracking_number) statusBits.push('Tracking: '+esc(rec.tracking_number));
+      if (rec.service_profile) statusBits.push(esc(rec.service_profile).replace(/_/g,' '));
+      if (leg === 'seller_to_valuna') {
+        statusBits.push('<span class="'+sellerEmailStatusClass(rec.seller_email_status)+'">Email: '+sellerEmailStatusLabel(rec.seller_email_status)+'</span>');
+        if (rec.qr_code_url) statusBits.push('QR saved');
+      }
+    }
     var meta = rec
-      ? '<span class="'+auspostStatusClass(rec.status)+'">'+auspostStatusLabel(rec.status)+'</span> '+
-        (rec.tracking_number ? 'Tracking: '+esc(rec.tracking_number)+' · ' : '')+
-        (rec.service_profile ? esc(rec.service_profile).replace(/_/g,' ') : 'service not set')
+      ? statusBits.join(' · ')
       : '<span class="auspost-pill">Not created</span> Ready to create draft shipping record.';
 
-    var actions = rec
-      ? '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Edit</button>'+
-        '<button class="btn tiny gold" onclick="markAuspostShipment(&quot;'+esc(rec.id)+'&quot;,&quot;label_ready&quot;)">Label Ready</button>'+
-        '<button class="btn tiny green" onclick="markAuspostShipment(&quot;'+esc(rec.id)+'&quot;,&quot;in_transit&quot;)">In Transit</button>'
-      : '<button class="btn tiny gold" onclick="createAuspostDraft(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Create Draft</button>'+
-        '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Manual</button>';
+    var baseArgs = '&quot;'+htmlArg(orderId)+'&quot;,&quot;'+htmlArg(orderType)+'&quot;,&quot;'+htmlArg(leg)+'&quot;,&quot;'+encodedArg(sellerEmail)+'&quot;,&quot;'+encodedArg(sellerName)+'&quot;,&quot;'+encodedArg(cardName)+'&quot;';
+    var actions = '';
+
+    if (rec) {
+      actions += '<button class="btn tiny" onclick="openAuspostEditor('+baseArgs+')">Edit</button>';
+      if (leg === 'seller_to_valuna') {
+        actions += '<button class="btn tiny" onclick="copySellerIntakeEmailForRecord(&quot;'+htmlArg(rec.id)+'&quot;)">Copy Email</button>';
+        actions += '<button class="btn tiny gold" onclick="markSellerIntakeEmailSent(&quot;'+htmlArg(rec.id)+'&quot;)">Mark Sent</button>';
+      } else {
+        actions += '<button class="btn tiny gold" onclick="markAuspostShipment(&quot;'+htmlArg(rec.id)+'&quot;,&quot;label_ready&quot;)">Label Ready</button>';
+      }
+      actions += '<button class="btn tiny green" onclick="markAuspostShipment(&quot;'+htmlArg(rec.id)+'&quot;,&quot;in_transit&quot;)">In Transit</button>';
+    } else {
+      if (leg === 'seller_to_valuna') {
+        actions += '<button class="btn tiny gold" onclick="createAuspostDraft(&quot;'+htmlArg(orderId)+'&quot;,&quot;'+htmlArg(orderType)+'&quot;,&quot;'+htmlArg(leg)+'&quot;,&quot;'+encodedArg(sellerEmail)+'&quot;,&quot;'+encodedArg(sellerName)+'&quot;,&quot;'+encodedArg(cardName)+'&quot;)">Create Intake Draft</button>';
+        actions += '<button class="btn tiny" onclick="openAuspostEditor('+baseArgs+')">Manual QR</button>';
+      } else {
+        actions += '<button class="btn tiny gold" onclick="createAuspostDraft(&quot;'+htmlArg(orderId)+'&quot;,&quot;'+htmlArg(orderType)+'&quot;,&quot;'+htmlArg(leg)+'&quot;)">Create Draft</button>';
+        actions += '<button class="btn tiny" onclick="openAuspostEditor('+baseArgs+')">Manual</button>';
+      }
+    }
 
     return '<div class="auspost-leg-row">'+
       '<div class="auspost-leg-main"><div class="auspost-leg-name">'+auspostLegLabel(leg)+'</div><div class="auspost-leg-meta">'+meta+'</div></div>'+
-      '<div class="auspost-leg-actions">'+actions+'</div>'+
+      '<div class="auspost-leg-actions">'+actions+'</div>'+ 
     '</div>';
   }).join('');
 
@@ -2040,13 +2267,13 @@ function renderAuspostPanel() {
   }
 
   body.innerHTML = rows.map(function(r) {
-    var label = r.label_url ? '<a class="btn tiny" href="'+esc(r.label_url)+'" target="_blank" rel="noopener">Open</a>' : '—';
+    var label = r.label_url ? '<a class="btn tiny" href="'+esc(r.label_url)+'" target="_blank" rel="noopener">Label</a>' : (r.qr_code_url ? '<a class="btn tiny" href="'+esc(r.qr_code_url)+'" target="_blank" rel="noopener">QR</a>' : '—');
     var tracking = r.tracking_number ? esc(r.tracking_number) : '—';
     return '<tr>'+
       '<td>'+esc(String(r.order_id || '').substring(0,12))+'</td>'+
       '<td>'+esc(r.order_type || '—')+'</td>'+
       '<td>'+auspostLegLabel(r.leg)+'</td>'+
-      '<td><span class="'+auspostStatusClass(r.status)+'">'+auspostStatusLabel(r.status)+'</span></td>'+
+      '<td><span class="'+auspostStatusClass(r.status)+'">'+auspostStatusLabel(r.status)+'</span>' + (r.leg === 'seller_to_valuna' ? '<br><span class="'+sellerEmailStatusClass(r.seller_email_status)+'">Email: '+sellerEmailStatusLabel(r.seller_email_status)+'</span>' : '') + '</td>'+
       '<td>'+esc((r.service_profile || 'standard_parcel').replace(/_/g,' '))+'</td>'+
       '<td>'+tracking+'</td>'+
       '<td>'+label+'</td>'+
@@ -2054,6 +2281,7 @@ function renderAuspostPanel() {
       '<td><div class="beta-row-actions">'+
         '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(r.order_id)+'&quot;,&quot;'+esc(r.order_type)+'&quot;,&quot;'+esc(r.leg)+'&quot;)">Edit</button>'+
         '<button class="btn tiny gold" onclick="markAuspostShipment(&quot;'+esc(r.id)+'&quot;,&quot;label_ready&quot;)">Label</button>'+
+        (r.leg === 'seller_to_valuna' ? '<button class="btn tiny" onclick="copySellerIntakeEmailForRecord(&quot;'+esc(r.id)+'&quot;)">Copy Email</button>' : '')+
         '<button class="btn tiny green" onclick="markAuspostShipment(&quot;'+esc(r.id)+'&quot;,&quot;delivered&quot;)">Delivered</button>'+
         '<button class="btn tiny red" onclick="deleteAuspostShipment(&quot;'+esc(r.id)+'&quot;)">Delete</button>'+
       '</div></td>'+
@@ -2066,20 +2294,33 @@ function clearAuspostForm() {
     'auspost-order-type':'marketplace',
     'auspost-leg':'seller_to_valuna',
     'auspost-status':'draft',
-    'auspost-service-profile':'standard_parcel'
+    'auspost-service-profile':'standard_parcel',
+    'seller-intake-label-type':'qr_code',
+    'seller-intake-email-status':'not_ready',
+    'seller-intake-state':''
   };
   Object.keys(defaults).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=defaults[id]; });
-  ['auspost-order-id','auspost-tracking-number','auspost-label-url','auspost-internal-note'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  [
+    'auspost-order-id','auspost-tracking-number','auspost-label-url','auspost-internal-note',
+    'seller-intake-card-name','seller-intake-email','seller-intake-name','seller-intake-phone',
+    'seller-intake-address1','seller-intake-suburb','seller-intake-postcode','seller-intake-qr-url',
+    'seller-intake-qr-expires','seller-intake-lodged-at','seller-intake-email-preview'
+  ].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
   var box = document.getElementById('auspost-admin-status');
   if (box) box.className = 'notice';
+  renderSellerIntakeEmailPreview();
 }
 
-function openAuspostEditor(orderId, orderType, leg) {
+function openAuspostEditor(orderId, orderType, leg, encodedSellerEmail, encodedSellerName, encodedCardName) {
   var tab = Array.from(document.querySelectorAll('.tab')).find(function(t){ return (t.textContent || '').toLowerCase().indexOf('auspost') !== -1; });
   if (tab) switchTab(tab, 'auspost');
 
   var rec = findAuspostShipment(orderId, orderType, leg);
   function val(id,value){ var el=document.getElementById(id); if(el) el.value = value == null ? '' : value; }
+
+  var passedSellerEmail = decodeArg(encodedSellerEmail || '');
+  var passedSellerName = decodeArg(encodedSellerName || '');
+  var passedCardName = decodeArg(encodedCardName || '');
 
   val('auspost-order-id', orderId);
   val('auspost-order-type', orderType || 'marketplace');
@@ -2089,22 +2330,131 @@ function openAuspostEditor(orderId, orderType, leg) {
   val('auspost-tracking-number', rec ? rec.tracking_number : '');
   val('auspost-label-url', rec ? rec.label_url : '');
   val('auspost-internal-note', rec ? rec.internal_note : '');
-  setAuspostAdminStatus('ok', rec ? 'Loaded existing shipping record for editing.' : 'Prepared new shipping record.');
+
+  val('seller-intake-card-name', rec ? (rec.card_name || passedCardName) : passedCardName);
+  val('seller-intake-email', rec ? (rec.seller_email || passedSellerEmail) : passedSellerEmail);
+  val('seller-intake-name', rec ? (rec.seller_name || passedSellerName) : passedSellerName);
+  val('seller-intake-phone', rec ? rec.seller_phone : '');
+  val('seller-intake-label-type', rec ? (rec.label_type || 'qr_code') : 'qr_code');
+  val('seller-intake-address1', rec ? rec.sender_address_line1 : '');
+  val('seller-intake-suburb', rec ? rec.sender_suburb : '');
+  val('seller-intake-state', rec ? rec.sender_state : '');
+  val('seller-intake-postcode', rec ? rec.sender_postcode : '');
+  val('seller-intake-qr-url', rec ? rec.qr_code_url : '');
+  val('seller-intake-qr-expires', rec ? localDateTimeValue(rec.qr_expires_at) : '');
+  val('seller-intake-email-status', rec ? (rec.seller_email_status || 'not_ready') : 'not_ready');
+  val('seller-intake-lodged-at', rec ? localDateTimeValue(rec.seller_lodged_at) : '');
+  renderSellerIntakeEmailPreview();
+  setAuspostAdminStatus('ok', rec ? 'Loaded existing shipping record for editing.' : 'Prepared new seller intake/shipping record.');
 }
 
 function getAuspostFormPayload() {
   var orderId = getInputValue('auspost-order-id');
   if (!orderId) throw new Error('Order ID is required.');
+  var leg = getInputValue('auspost-leg') || 'seller_to_valuna';
+  var qrExpires = getInputValue('seller-intake-qr-expires');
+  var lodgedAt = getInputValue('seller-intake-lodged-at');
   return {
     p_order_id: orderId,
     p_order_type: getInputValue('auspost-order-type') || 'marketplace',
-    p_leg: getInputValue('auspost-leg') || 'seller_to_valuna',
+    p_leg: leg,
     p_service_profile: getInputValue('auspost-service-profile') || 'standard_parcel',
     p_tracking_number: getInputValue('auspost-tracking-number') || null,
     p_label_url: getInputValue('auspost-label-url') || null,
     p_status: getInputValue('auspost-status') || 'draft',
-    p_internal_note: getInputValue('auspost-internal-note') || null
+    p_internal_note: getInputValue('auspost-internal-note') || null,
+    p_seller_email: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-email') || null) : null,
+    p_seller_name: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-name') || null) : null,
+    p_seller_phone: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-phone') || null) : null,
+    p_sender_address_line1: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-address1') || null) : null,
+    p_sender_suburb: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-suburb') || null) : null,
+    p_sender_state: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-state') || null) : null,
+    p_sender_postcode: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-postcode') || null) : null,
+    p_qr_code_url: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-qr-url') || null) : null,
+    p_qr_expires_at: leg === 'seller_to_valuna' && qrExpires ? new Date(qrExpires).toISOString() : null,
+    p_label_type: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-label-type') || 'qr_code') : null,
+    p_seller_email_status: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-email-status') || 'not_ready') : null,
+    p_seller_lodged_at: leg === 'seller_to_valuna' && lodgedAt ? new Date(lodgedAt).toISOString() : null,
+    p_card_name: leg === 'seller_to_valuna' ? (getInputValue('seller-intake-card-name') || null) : null
   };
+}
+
+function buildSellerIntakeEmailText(rec) {
+  rec = rec || {};
+  var orderId = rec.order_id || getInputValue('auspost-order-id') || '—';
+  var cardName = rec.card_name || getInputValue('seller-intake-card-name') || 'your card';
+  var sellerName = rec.seller_name || getInputValue('seller-intake-name') || '';
+  var qrUrl = rec.qr_code_url || getInputValue('seller-intake-qr-url') || '';
+  var labelUrl = rec.label_url || getInputValue('auspost-label-url') || '';
+  var tracking = rec.tracking_number || getInputValue('auspost-tracking-number') || '';
+  var expires = rec.qr_expires_at || getInputValue('seller-intake-qr-expires') || '';
+  var greeting = sellerName ? ('Hi ' + sellerName + ',') : 'Hi,';
+  var lines = [];
+  lines.push('Subject: Your Valuna intake QR code is ready');
+  lines.push('');
+  lines.push(greeting);
+  lines.push('');
+  lines.push('Your card has sold and is ready to be sent to Valuna for verification.');
+  lines.push('');
+  lines.push('Order: #' + String(orderId).substring(0,8));
+  lines.push('Card: ' + cardName);
+  lines.push('');
+  lines.push('Please package the card securely, then take it to an Australia Post counter and show the QR code or label details provided with this email. Australia Post can print the shipping label for you at the counter.');
+  if (qrUrl) lines.push('');
+  if (qrUrl) lines.push('QR code / MyPost link: ' + qrUrl);
+  if (labelUrl) lines.push('Label link: ' + labelUrl);
+  if (tracking) lines.push('Tracking: ' + tracking);
+  if (expires) lines.push('QR expiry: ' + fmtDate(expires));
+  lines.push('');
+  lines.push('You do not need the buyer’s delivery address. Buyer delivery details are kept private. Your card is sent to Valuna first for verification, then Valuna ships it to the buyer once approved.');
+  lines.push('');
+  lines.push('Please lodge the parcel as soon as possible.');
+  lines.push('');
+  lines.push('Thank you,');
+  lines.push('Valuna');
+  return lines.join('\n');
+}
+
+function renderSellerIntakeEmailPreview() {
+  var el = document.getElementById('seller-intake-email-preview');
+  if (!el) return;
+  el.value = buildSellerIntakeEmailText();
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+  var tmp = document.createElement('textarea');
+  tmp.value = text;
+  document.body.appendChild(tmp);
+  tmp.select();
+  var ok = document.execCommand('copy');
+  document.body.removeChild(tmp);
+  return ok;
+}
+
+async function copySellerIntakeEmail() {
+  try {
+    renderSellerIntakeEmailPreview();
+    var body = document.getElementById('seller-intake-email-preview').value;
+    await copyTextToClipboard(body);
+    setAuspostAdminStatus('ok','Seller intake email copied. Paste it into hello@valuna.app and attach/paste the QR or label if needed.');
+  } catch(e) {
+    setAuspostAdminStatus('err','Could not copy seller email: ' + e.message);
+  }
+}
+
+async function copySellerIntakeEmailForRecord(id) {
+  try {
+    var rec = (cachedAuspostShipments || []).find(function(s){ return String(s.id) === String(id); });
+    if (!rec) throw new Error('Shipping record not found.');
+    await copyTextToClipboard(buildSellerIntakeEmailText(rec));
+    setAuspostAdminStatus('ok','Seller intake email copied from shipping record.');
+  } catch(e) {
+    alert('Could not copy seller intake email: ' + e.message);
+  }
 }
 
 async function saveAuspostShipment() {
@@ -2113,6 +2463,7 @@ async function saveAuspostShipment() {
     setAuspostAdminStatus('ok','Saving AusPost shipping record...');
     await rpc('admin_upsert_auspost_shipment', payload);
     setAuspostAdminStatus('ok','Shipping record saved.');
+    renderSellerIntakeEmailPreview();
     await loadAuspostShipments(true);
     renderOrders(cachedOrders || []);
     renderShopOrders(cachedShopOrders || []);
@@ -2121,8 +2472,12 @@ async function saveAuspostShipment() {
   }
 }
 
-async function createAuspostDraft(orderId, orderType, leg) {
+async function createAuspostDraft(orderId, orderType, leg, encodedSellerEmail, encodedSellerName, encodedCardName) {
   try {
+    var isSellerIntake = leg === 'seller_to_valuna';
+    var sellerEmail = decodeArg(encodedSellerEmail || '');
+    var sellerName = decodeArg(encodedSellerName || '');
+    var cardName = decodeArg(encodedCardName || '');
     await rpc('admin_upsert_auspost_shipment', {
       p_order_id:String(orderId),
       p_order_type:orderType || 'marketplace',
@@ -2131,7 +2486,20 @@ async function createAuspostDraft(orderId, orderType, leg) {
       p_tracking_number:null,
       p_label_url:null,
       p_status:'draft',
-      p_internal_note:'Draft created from admin order card.'
+      p_internal_note:isSellerIntake ? 'Seller intake QR/label draft created from admin order card. Create label in MyPost Business, then paste QR/label/tracking here.' : 'Draft created from admin order card.',
+      p_seller_email:isSellerIntake ? (sellerEmail || null) : null,
+      p_seller_name:isSellerIntake ? (sellerName || null) : null,
+      p_seller_phone:null,
+      p_sender_address_line1:null,
+      p_sender_suburb:null,
+      p_sender_state:null,
+      p_sender_postcode:null,
+      p_qr_code_url:null,
+      p_qr_expires_at:null,
+      p_label_type:isSellerIntake ? 'qr_code' : null,
+      p_seller_email_status:isSellerIntake ? 'not_ready' : null,
+      p_seller_lodged_at:null,
+      p_card_name:isSellerIntake ? (cardName || null) : null
     });
     await loadAuspostShipments(true);
     renderOrders(cachedOrders || []);
@@ -2150,6 +2518,51 @@ async function markAuspostShipment(id, status) {
     renderShopOrders(cachedShopOrders || []);
   } catch(e) {
     alert('Could not update AusPost status: ' + e.message);
+  }
+}
+
+async function markSellerIntakeEmailSent(id) {
+  try {
+    if (!id) return;
+    await rpc('admin_mark_seller_intake_email_sent', { p_id:id, p_status:'sent' });
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    alert('Could not mark seller email sent: ' + e.message);
+  }
+}
+
+async function markSellerIntakeEmailSentFromForm() {
+  try {
+    var payload = getAuspostFormPayload();
+    payload.p_seller_email_status = 'sent';
+    payload.p_status = payload.p_status === 'draft' ? 'label_ready' : payload.p_status;
+    setAuspostAdminStatus('ok','Saving shipping record and marking seller QR email as sent...');
+    var id = await rpc('admin_upsert_auspost_shipment', payload);
+    await rpc('admin_mark_seller_intake_email_sent', { p_id:id, p_status:'sent' });
+    setAuspostAdminStatus('ok','Seller QR email marked as sent.');
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    setAuspostAdminStatus('err','Could not mark seller QR email sent: ' + e.message);
+  }
+}
+
+async function markSellerLodgedFromForm() {
+  try {
+    var payload = getAuspostFormPayload();
+    payload.p_status = 'in_transit';
+    payload.p_seller_lodged_at = new Date().toISOString();
+    setAuspostAdminStatus('ok','Marking seller parcel as lodged...');
+    await rpc('admin_upsert_auspost_shipment', payload);
+    setAuspostAdminStatus('ok','Seller parcel marked as lodged / in transit.');
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    setAuspostAdminStatus('err','Could not mark seller lodged: ' + e.message);
   }
 }
 
@@ -2534,6 +2947,22 @@ async function deleteShopProduct(id, name) {
   }
 }
 
+
+
+document.addEventListener('input', function(e) {
+  if (!e.target || !e.target.id) return;
+  if (e.target.id.indexOf('seller-intake-') === 0 || e.target.id.indexOf('auspost-') === 0) {
+    renderSellerIntakeEmailPreview();
+  }
+});
+
+document.addEventListener('change', function(e) {
+  if (!e.target || !e.target.id) return;
+  if (e.target.id.indexOf('seller-intake-') === 0 || e.target.id.indexOf('auspost-') === 0) {
+    renderSellerIntakeEmailPreview();
+  }
+});
+
 document.addEventListener('change', function(e) {
   if (!e.target || e.target.id !== 'shop-image-files') return;
   var preview = document.getElementById('shop-image-preview');
@@ -2564,4 +2993,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-08_SIGN_OUT_FIX -->
 
 <!-- Build: admin-10_AUSPOST_SYNTAX_FIX_RESTORE_PRODUCTS -->
+
+<!-- Build: admin-12_SELLER_INTAKE_QR_FLOW -->
 </html>
