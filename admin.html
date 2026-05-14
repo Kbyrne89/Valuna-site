@@ -2170,12 +2170,9 @@ async function loadProducts() {
     var container = document.getElementById('products-body');
     if (container) container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
-    const { data, error } = await sb
-      .from('shop_products')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
+    // Shop products are loaded through an approved-admin SECURITY DEFINER RPC.
+    // This avoids browser-side access to admin policy helper tables such as approved_admins.
+    const data = await rpc('admin_get_shop_products');
 
     renderShopProducts(data || []);
   } catch(e) {
@@ -2483,16 +2480,15 @@ async function saveShopProduct() {
       updated_at: new Date().toISOString()
     };
 
-    var query;
-    if (id) {
-      query = sb.from('shop_products').update(payload).eq('id', id);
-    } else {
+    if (!id) {
       payload.created_at = new Date().toISOString();
-      query = sb.from('shop_products').insert(payload);
     }
 
-    var result = await withShopTimeout(query, 'Product save', 20000);
-    if (result.error) throw result.error;
+    await withShopTimeout(
+      rpc('admin_upsert_shop_product', { p_product_id: id || null, p_product: payload }),
+      'Product save',
+      20000
+    );
 
     setShopAdminStatus('ok', id ? 'Product updated.' : 'Product added.');
 
@@ -2512,8 +2508,7 @@ async function saveShopProduct() {
 
 async function toggleShopProductActive(id, nextValue) {
   try {
-    const { error } = await sb.from('shop_products').update({ is_active: nextValue, updated_at: new Date().toISOString() }).eq('id', id);
-    if (error) throw error;
+    await rpc('admin_update_shop_product_flags', { p_product_id: id, p_is_active: nextValue, p_featured: null });
     await loadProducts();
   } catch(e) {
     alert('Could not update product visibility: ' + e.message);
@@ -2522,8 +2517,7 @@ async function toggleShopProductActive(id, nextValue) {
 
 async function toggleShopProductFeatured(id, nextValue) {
   try {
-    const { error } = await sb.from('shop_products').update({ featured: nextValue, updated_at: new Date().toISOString() }).eq('id', id);
-    if (error) throw error;
+    await rpc('admin_update_shop_product_flags', { p_product_id: id, p_is_active: null, p_featured: nextValue });
     await loadProducts();
   } catch(e) {
     alert('Could not update featured status: ' + e.message);
@@ -2533,8 +2527,7 @@ async function toggleShopProductFeatured(id, nextValue) {
 async function deleteShopProduct(id, name) {
   if (!confirm('Delete '+(name || 'this product')+'? This cannot be undone.')) return;
   try {
-    const { error } = await sb.from('shop_products').delete().eq('id', id);
-    if (error) throw error;
+    await rpc('admin_delete_shop_product', { p_product_id: id });
     await loadProducts();
   } catch(e) {
     alert('Could not delete product: ' + e.message);
