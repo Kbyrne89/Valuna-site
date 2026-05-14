@@ -301,6 +301,66 @@ tr:last-child td{border-bottom:none;}
   border-color:transparent;
   background:linear-gradient(135deg,#a87830,#e8c96a,#c9a84c,#8a6020);
 }
+
+/* ─────────────────────────────────────────────
+   PRIVATE BETA ACCESS CONTROL
+───────────────────────────────────────────── */
+.beta-admin-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:12px;
+  margin:12px 0 16px;
+}
+.beta-admin-card{
+  background:#0a0810;
+  border:1px solid #1a1230;
+  border-radius:16px;
+  padding:16px;
+}
+.beta-admin-card strong{
+  display:block;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:14px;
+  color:#f2ecd8;
+  margin-bottom:6px;
+}
+.beta-admin-card p{
+  color:#9b96ae;
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+.beta-admin-form{
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) minmax(210px,.8fr);
+  gap:10px;
+  align-items:end;
+}
+.beta-admin-form .actions{
+  grid-column:1/-1;
+}
+.beta-row-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.btn.tiny{
+  padding:7px 10px;
+  font-size:12px;
+  border-radius:8px;
+}
+.beta-muted{
+  color:#6b6b6b;
+  font-size:12px;
+  line-height:1.5;
+}
+@media(max-width:900px){
+  .beta-admin-grid,
+  .beta-admin-form{grid-template-columns:1fr;}
+}
 .ops-grid{
   display:grid;
   gap:12px;
@@ -645,9 +705,50 @@ tr:last-child td{border-bottom:none;}
     </div>
 
     <div class="panel" id="panel-beta">
+      <div class="ops-head">
+        <div>
+          <div class="kicker">Private Beta</div>
+          <h2 class="dash-heading" style="margin-bottom:6px;">Beta Access Control</h2>
+          <div class="ops-copy">
+            Approve collectors immediately, schedule waved access, or remove an email from the beta list. Access timing should be enforced by the backend using status plus access start time.
+          </div>
+        </div>
+        <div class="ops-toolbar">
+          <button class="btn" onclick="loadBetaRequests()">Refresh Beta</button>
+        </div>
+      </div>
+
+      <div class="beta-admin-grid">
+        <div class="beta-admin-card">
+          <strong>Manual Beta Access</strong>
+          <p>Use this when you need to approve or schedule an email directly, including waved entry preparation.</p>
+          <div class="beta-admin-form">
+            <div>
+              <label for="beta-manual-email">Email</label>
+              <input class="input" id="beta-manual-email" type="email" inputmode="email" placeholder="collector@email.com" autocomplete="off">
+            </div>
+            <div>
+              <label for="beta-wave-date">Wave Start</label>
+              <input class="input" id="beta-wave-date" type="datetime-local">
+            </div>
+            <div class="actions">
+              <button class="btn gold" onclick="approveManualBetaNow()">Approve Now</button>
+              <button class="btn" onclick="scheduleManualBetaWave()">Schedule Wave</button>
+            </div>
+          </div>
+        </div>
+        <div class="beta-admin-card">
+          <strong>Admin Safety</strong>
+          <p>These controls should call locked Supabase RPCs only. Do not open public table write permissions for beta access.</p>
+          <div class="beta-muted">Recommended flow: pending request → approved with access start date → founding/member checks stay backend controlled.</div>
+        </div>
+      </div>
+
+      <div class="notice" id="beta-admin-status"></div>
+
       <div class="table-wrap"><table>
-        <thead><tr><th>Email</th><th>Status</th><th>Founder</th><th>Founder #</th><th>Access Starts</th><th>Requested</th></tr></thead>
-        <tbody id="beta-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+        <thead><tr><th>Email</th><th>Status</th><th>Founder</th><th>Founder #</th><th>Access Starts</th><th>Requested</th><th>Actions</th></tr></thead>
+        <tbody id="beta-body"><tr><td colspan="7"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
       </table></div>
     </div>
 
@@ -829,7 +930,7 @@ tr:last-child td{border-bottom:none;}
     </div>
 
 
-    <div class="footer-note">Admin page v0.1. Marketplace extraction has started. Do not remove the old marketplace admin section until this page is fully tested.</div>
+    <div class="footer-note">Admin page v0.2. Beta access controls added. Preserve split marketplace/shop operations and test RPCs before opening waved beta entry.</div>
   </section>
 </div>
 </div>
@@ -1432,20 +1533,156 @@ async function setShopOrderStatus(id, status) {
   }
 }
 
+function setBetaAdminStatus(type,msg) {
+  const el=document.getElementById('beta-admin-status');
+  if (!el) return;
+  el.className='notice '+(type==='ok'?'ok':'err');
+  el.textContent=msg;
+}
+
+function normaliseBetaEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function validEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+}
+
+function betaBadgeClass(status) {
+  const s=String(status || '').toLowerCase();
+  if (['approved','active','granted','accepted'].includes(s)) return 'badge green';
+  if (['removed','rejected','denied','cancelled'].includes(s)) return 'badge red';
+  return 'badge';
+}
+
+function betaDateLabel(v) {
+  return v ? fmtDate(v) : '—';
+}
+
+function betaManualValues(requireWaveDate) {
+  const email = normaliseBetaEmail(document.getElementById('beta-manual-email').value);
+  const waveInput = document.getElementById('beta-wave-date');
+  const waveValue = waveInput ? waveInput.value : '';
+  if (!validEmail(email)) throw new Error('Enter a valid email address.');
+  if (requireWaveDate && !waveValue) throw new Error('Choose a wave start date/time first.');
+  return {
+    email: email,
+    accessStartsAt: waveValue ? new Date(waveValue).toISOString() : new Date().toISOString()
+  };
+}
+
+async function approveManualBetaNow() {
+  try {
+    const values = betaManualValues(false);
+    await approveBetaEmail(values.email, new Date().toISOString(), 'Manual email approved for beta access.');
+  } catch(e) {
+    setBetaAdminStatus('err', e.message);
+  }
+}
+
+async function scheduleManualBetaWave() {
+  try {
+    const values = betaManualValues(true);
+    await approveBetaEmail(values.email, values.accessStartsAt, 'Manual email scheduled for beta wave access.');
+  } catch(e) {
+    setBetaAdminStatus('err', e.message);
+  }
+}
+
+async function approveBetaNow(encodedEmail) {
+  const email = normaliseBetaEmail(decodeURIComponent(encodedEmail || ''));
+  if (!email) return;
+  const ok = confirm('Approve beta access now for ' + email + '?');
+  if (!ok) return;
+  await approveBetaEmail(email, new Date().toISOString(), 'Beta access approved.');
+}
+
+async function scheduleBetaWave(encodedEmail) {
+  const email = normaliseBetaEmail(decodeURIComponent(encodedEmail || ''));
+  if (!email) return;
+  const when = prompt('Enter wave access start date/time for ' + email + ' (example: 2026-05-31 09:00)');
+  if (!when) return;
+  const parsed = new Date(when.replace(' ', 'T'));
+  if (isNaN(parsed.getTime())) {
+    setBetaAdminStatus('err','That date/time could not be read. Use format like 2026-05-31 09:00.');
+    return;
+  }
+  await approveBetaEmail(email, parsed.toISOString(), 'Beta wave scheduled.');
+}
+
+async function approveBetaEmail(email, accessStartsAt, successMessage) {
+  try {
+    setBetaAdminStatus('ok','Saving beta access...');
+    await rpc('admin_approve_beta_request', { p_email: email, p_access_starts_at: accessStartsAt });
+    const manualEmail = document.getElementById('beta-manual-email');
+    if (manualEmail) manualEmail.value='';
+    setBetaAdminStatus('ok', successMessage || 'Beta access saved.');
+    await loadBetaRequests();
+  } catch(e) {
+    setBetaAdminStatus('err','Could not approve beta access: ' + e.message);
+  }
+}
+
+async function holdBetaEmail(encodedEmail) {
+  const email = normaliseBetaEmail(decodeURIComponent(encodedEmail || ''));
+  if (!email) return;
+  const ok = confirm('Move ' + email + ' back to pending beta status?');
+  if (!ok) return;
+  try {
+    setBetaAdminStatus('ok','Updating beta request...');
+    await rpc('admin_update_beta_request_status', { p_email: email, p_status: 'pending' });
+    setBetaAdminStatus('ok','Beta request moved back to pending.');
+    await loadBetaRequests();
+  } catch(e) {
+    setBetaAdminStatus('err','Could not update beta request: ' + e.message);
+  }
+}
+
+async function removeBetaEmail(encodedEmail) {
+  const email = normaliseBetaEmail(decodeURIComponent(encodedEmail || ''));
+  if (!email) return;
+  const ok = confirm('Remove ' + email + ' from beta access requests? This does not delete the person from auth; it only removes the beta access record.');
+  if (!ok) return;
+  try {
+    setBetaAdminStatus('ok','Removing beta email...');
+    await rpc('admin_remove_beta_request', { p_email: email });
+    setBetaAdminStatus('ok','Beta email removed.');
+    await loadBetaRequests();
+  } catch(e) {
+    setBetaAdminStatus('err','Could not remove beta email: ' + e.message);
+  }
+}
+
 async function loadBetaRequests() {
   try {
     const rows = await rpc('admin_get_beta_requests');
     document.getElementById('stat-beta').textContent = Array.isArray(rows) ? rows.length : 0;
     const body=document.getElementById('beta-body');
     if (!rows || !rows.length) {
-      body.innerHTML='<tr><td colspan="6"><div class="empty">No beta requests yet</div></td></tr>';
+      body.innerHTML='<tr><td colspan="7"><div class="empty">No beta requests yet</div></td></tr>';
       return;
     }
     body.innerHTML=rows.map(function(r){
-      return '<tr><td>'+esc(r.email)+'</td><td><span class="badge">'+esc(r.status)+'</span></td><td>'+(r.is_founder_eligible?'Yes':'No')+'</td><td>'+(r.founder_number || '—')+'</td><td>'+esc(r.access_starts_at || '—')+'</td><td>'+fmtDate(r.requested_at)+'</td></tr>';
+      const email = normaliseBetaEmail(r.email);
+      const encoded = encodeURIComponent(email);
+      const status = r.status || 'pending';
+      return '<tr>'+
+        '<td>'+esc(email)+'</td>'+
+        '<td><span class="'+betaBadgeClass(status)+'">'+esc(status)+'</span></td>'+
+        '<td>'+(r.is_founder_eligible?'Yes':'No')+'</td>'+
+        '<td>'+(r.founder_number || '—')+'</td>'+
+        '<td>'+betaDateLabel(r.access_starts_at)+'</td>'+
+        '<td>'+fmtDate(r.requested_at)+'</td>'+
+        '<td><div class="beta-row-actions">'+
+          '<button class="btn tiny gold" onclick="approveBetaNow(\''+encoded+'\')">Approve</button>'+
+          '<button class="btn tiny" onclick="scheduleBetaWave(\''+encoded+'\')">Wave</button>'+
+          '<button class="btn tiny" onclick="holdBetaEmail(\''+encoded+'\')">Pending</button>'+
+          '<button class="btn tiny red" onclick="removeBetaEmail(\''+encoded+'\')">Remove</button>'+
+        '</div></td>'+
+      '</tr>';
     }).join('');
   } catch(e) {
-    document.getElementById('beta-body').innerHTML='<tr><td colspan="6">Could not load beta requests: '+esc(e.message)+'</td></tr>';
+    document.getElementById('beta-body').innerHTML='<tr><td colspan="7">Could not load beta requests: '+esc(e.message)+'</td></tr>';
   }
 }
 
