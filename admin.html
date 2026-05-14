@@ -570,6 +570,131 @@ tr:last-child td{border-bottom:none;}
   .shop-order-flow{grid-template-columns:1fr 1fr;}
 }
 
+
+/* ─────────────────────────────────────────────
+   AUSPOST SHIPPING FOUNDATION — ADMIN ONLY
+───────────────────────────────────────────── */
+.auspost-admin-grid{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:14px;
+  margin-bottom:16px;
+}
+.auspost-admin-card{
+  background:#0a0810;
+  border:1px solid rgba(201,168,76,.18);
+  border-radius:18px;
+  padding:18px;
+}
+.auspost-admin-card strong{
+  display:block;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:18px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#f2ecd8;
+  margin-bottom:6px;
+}
+.auspost-admin-card p{
+  color:#a8a2b8;
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+.auspost-form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.auspost-form-grid .full{grid-column:1/-1;}
+.auspost-order-block{
+  margin-top:14px;
+  background:#0f0a1a;
+  border:1px solid #1a1230;
+  border-radius:12px;
+  padding:12px;
+}
+.auspost-order-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-bottom:8px;
+}
+.auspost-leg-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0;
+  border-top:1px solid rgba(26,18,48,.75);
+}
+.auspost-leg-row:first-of-type{border-top:none;}
+.auspost-leg-main{min-width:0;}
+.auspost-leg-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#f2ecd8;
+}
+.auspost-leg-meta{
+  color:#9b96ae;
+  font-size:12px;
+  line-height:1.45;
+  margin-top:2px;
+  word-break:break-word;
+}
+.auspost-leg-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.auspost-pill{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:1px solid rgba(201,168,76,.22);
+  color:#c9a84c;
+  background:rgba(201,168,76,.06);
+}
+.auspost-pill.green{color:#2a9d6a;border-color:rgba(42,157,106,.25);background:rgba(42,157,106,.08);}
+.auspost-pill.red{color:#e05252;border-color:rgba(224,82,82,.25);background:rgba(224,82,82,.08);}
+.auspost-pill.purple{color:#a855f7;border-color:rgba(168,85,247,.25);background:rgba(168,85,247,.08);}
+.auspost-note{
+  color:#6b6b6b;
+  font-size:12px;
+  line-height:1.55;
+}
+.auspost-live-warning{
+  background:rgba(201,168,76,.08);
+  border:1px solid rgba(201,168,76,.20);
+  color:#c8c2ae;
+  border-radius:12px;
+  padding:12px;
+  font-size:13px;
+  line-height:1.6;
+}
+@media(max-width:980px){
+  .auspost-admin-grid{grid-template-columns:1fr;}
+  .auspost-form-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:620px){
+  .auspost-form-grid{grid-template-columns:1fr;}
+  .auspost-leg-row{display:block;}
+  .auspost-leg-actions{justify-content:flex-start;margin-top:8px;}
+}
+
 </style>
 </head>
 <body>
@@ -640,6 +765,7 @@ tr:last-child td{border-bottom:none;}
       <button class="tab" onclick="switchTab(this,'verification')">Verification Queue</button>
       <button class="tab" onclick="switchTab(this,'beta')">Beta Requests</button>
       <button class="tab" onclick="switchTab(this,'admins')">Approved Admins</button>
+      <button class="tab" onclick="switchTab(this,'auspost')">AusPost Shipping</button>
       <button class="tab" onclick="switchTab(this,'products')">Shop Products</button>
     </div>
 
@@ -756,6 +882,103 @@ tr:last-child td{border-bottom:none;}
       <div class="table-wrap"><table>
         <thead><tr><th>Email</th><th>Access Level</th><th>Approved</th><th>Active</th></tr></thead>
         <tbody id="admins-body"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+      </table></div>
+    </div>
+
+
+    <div class="panel" id="panel-auspost">
+      <div class="ops-head">
+        <div>
+          <div class="kicker">Shipping Foundation</div>
+          <h2 class="dash-heading" style="margin-bottom:6px;">AusPost Shipping Control</h2>
+          <div class="ops-copy">
+            Admin-only shipping layer for marketplace intake, buyer dispatch and direct-from-Valuna shop fulfilment. Live API calls should later run through Supabase Edge Functions, not from this browser page.
+          </div>
+        </div>
+        <div class="ops-toolbar">
+          <button class="btn" onclick="loadAuspostShipments()">Refresh Shipping</button>
+        </div>
+      </div>
+
+      <div class="auspost-admin-grid">
+        <div class="auspost-admin-card">
+          <strong>Shipment Record</strong>
+          <p>Create or update a shipping record against an order leg. This prepares the database shape needed before connecting the live AusPost label API.</p>
+          <div class="auspost-form-grid">
+            <div>
+              <label for="auspost-order-type">Order Type</label>
+              <select class="select" id="auspost-order-type">
+                <option value="marketplace">Marketplace</option>
+                <option value="shop">Shop</option>
+              </select>
+            </div>
+            <div>
+              <label for="auspost-leg">Shipping Leg</label>
+              <select class="select" id="auspost-leg">
+                <option value="seller_to_valuna">Seller → Valuna Intake</option>
+                <option value="valuna_to_buyer">Valuna → Buyer Dispatch</option>
+                <option value="return_to_seller">Return to Seller</option>
+              </select>
+            </div>
+            <div>
+              <label for="auspost-status">Status</label>
+              <select class="select" id="auspost-status">
+                <option value="draft">Draft</option>
+                <option value="label_requested">Label Requested</option>
+                <option value="label_ready">Label Ready</option>
+                <option value="in_transit">In Transit</option>
+                <option value="delivered">Delivered</option>
+                <option value="issue">Issue</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="full">
+              <label for="auspost-order-id">Order ID</label>
+              <input class="input" id="auspost-order-id" placeholder="Paste or select from an order card">
+            </div>
+            <div>
+              <label for="auspost-service-profile">Service Profile</label>
+              <select class="select" id="auspost-service-profile">
+                <option value="standard_parcel">Standard Parcel</option>
+                <option value="express_post">Express Post</option>
+                <option value="tracked_letter">Tracked Letter</option>
+                <option value="signature_required">Signature Required</option>
+                <option value="manual">Manual / Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="auspost-tracking-number">Tracking Number</label>
+              <input class="input" id="auspost-tracking-number" placeholder="Optional until label created">
+            </div>
+            <div>
+              <label for="auspost-label-url">Label URL</label>
+              <input class="input" id="auspost-label-url" placeholder="Optional label PDF URL">
+            </div>
+            <div class="full">
+              <label for="auspost-internal-note">Internal Note</label>
+              <input class="input" id="auspost-internal-note" placeholder="Example: seller no-printer QR required, fragile card mailer, signature required">
+            </div>
+          </div>
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn gold" onclick="saveAuspostShipment()">Save Shipping Record</button>
+            <button class="btn" onclick="clearAuspostForm()">Clear</button>
+          </div>
+          <div class="notice" id="auspost-admin-status"></div>
+        </div>
+
+        <div class="auspost-admin-card">
+          <strong>Live API Guardrail</strong>
+          <div class="auspost-live-warning">
+            Do not place AusPost API keys in this HTML. The next live step is a Supabase Edge Function that creates shipments/labels using server-side credentials, then writes tracking and label results back to these records.
+          </div>
+          <p style="margin-top:12px;">Marketplace has two shipping legs: seller to Valuna intake, then Valuna to buyer. Shop orders use one leg: Valuna stock to buyer.</p>
+          <div class="auspost-note">Buyer address privacy remains protected: sellers should only receive Valuna intake instructions, never the buyer delivery address.</div>
+        </div>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>Order</th><th>Type</th><th>Leg</th><th>Status</th><th>Service</th><th>Tracking</th><th>Label</th><th>Updated</th><th>Actions</th></tr></thead>
+        <tbody id="auspost-body"><tr><td colspan="9"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
       </table></div>
     </div>
 
@@ -1134,7 +1357,9 @@ const STATUS_OPTIONS = [
 
 async function refreshAll() {
   if (!approvedAdmin) return;
+  await loadAuspostShipments(true);
   await Promise.allSettled([loadOrders(), loadShopOrders(), loadBetaRequests(), loadApprovedAdmins(), loadProducts()]);
+  renderAuspostPanel();
 }
 
 async function rpc(name,args) {
@@ -1284,6 +1509,8 @@ function renderOrders(rows) {
         '<div class="ops-panel"><div class="ops-panel-title">Seller-facing flow</div><div class="ops-panel-body">Seller should only see Valuna intake instructions. Buyer delivery details remain hidden from seller.</div></div>'+
         '<div class="ops-panel"><div class="ops-panel-title">Valuna internal action</div><div class="ops-panel-body">'+opsInternalInstruction(o.status)+'</div></div>'+
       '</div>'+
+
+      auspostOrderBlock(o.id, 'marketplace', ['seller_to_valuna','valuna_to_buyer'])+
 
       nextOpsActions(o)+
 
@@ -1472,6 +1699,7 @@ function renderShopOrders(rows) {
         '<div class="ops-panel"><div class="ops-panel-title">Shop fulfilment</div><div class="ops-panel-body">'+shopInternalInstruction(status)+'</div></div>'+
         '<div class="ops-panel"><div class="ops-panel-title">AusPost foundation</div><div class="ops-panel-body">Use this flow for packing and dispatch. AusPost label/tracking connection can plug into Ready to Dispatch later.</div></div>'+
       '</div>'+
+      auspostOrderBlock(o.id, 'shop', ['valuna_to_buyer'])+
       shopNextActions(o)+
       '<div class="ops-status-row">'+
         '<select class="status-select" id="shop-st-'+esc(o.id)+'">'+options+'</select>'+
@@ -1703,6 +1931,239 @@ async function loadApprovedAdmins() {
   }
 }
 
+
+
+// ─────────────────────────────────────────────
+// AUSPOST SHIPPING FOUNDATION
+// ─────────────────────────────────────────────
+var cachedAuspostShipments = [];
+
+function setAuspostAdminStatus(type,msg) {
+  var box = document.getElementById('auspost-admin-status');
+  if (!box) return;
+  box.className = 'notice ' + (type === 'ok' ? 'ok' : 'err');
+  box.textContent = msg;
+}
+
+function auspostStatusLabel(status) {
+  const map = {
+    draft:'Draft',
+    label_requested:'Label Requested',
+    label_ready:'Label Ready',
+    in_transit:'In Transit',
+    delivered:'Delivered',
+    issue:'Issue',
+    cancelled:'Cancelled'
+  };
+  return map[status] || status || 'Draft';
+}
+
+function auspostLegLabel(leg) {
+  const map = {
+    seller_to_valuna:'Seller → Valuna Intake',
+    valuna_to_buyer:'Valuna → Buyer Dispatch',
+    return_to_seller:'Return to Seller'
+  };
+  return map[leg] || leg || 'Shipping Leg';
+}
+
+function auspostStatusClass(status) {
+  if (['delivered','in_transit'].includes(status)) return 'auspost-pill green';
+  if (['issue','cancelled'].includes(status)) return 'auspost-pill red';
+  if (['label_ready','label_requested'].includes(status)) return 'auspost-pill purple';
+  return 'auspost-pill';
+}
+
+function findAuspostShipment(orderId, orderType, leg) {
+  return (cachedAuspostShipments || []).find(function(s) {
+    return String(s.order_id) === String(orderId) && String(s.order_type) === String(orderType) && String(s.leg) === String(leg);
+  });
+}
+
+function auspostOrderBlock(orderId, orderType, legs) {
+  if (!orderId) return '';
+  var rows = (legs || []).map(function(leg) {
+    var rec = findAuspostShipment(orderId, orderType, leg);
+    var meta = rec
+      ? '<span class="'+auspostStatusClass(rec.status)+'">'+auspostStatusLabel(rec.status)+'</span> '+
+        (rec.tracking_number ? 'Tracking: '+esc(rec.tracking_number)+' · ' : '')+
+        (rec.service_profile ? esc(rec.service_profile).replace(/_/g,' ') : 'service not set')
+      : '<span class="auspost-pill">Not created</span> Ready to create draft shipping record.';
+
+    var actions = rec
+      ? '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Edit</button>'+
+        '<button class="btn tiny gold" onclick="markAuspostShipment(&quot;'+esc(rec.id)+'&quot;,&quot;label_ready&quot;)">Label Ready</button>'+
+        '<button class="btn tiny green" onclick="markAuspostShipment(&quot;'+esc(rec.id)+'&quot;,&quot;in_transit&quot;)">In Transit</button>'
+      : '<button class="btn tiny gold" onclick="createAuspostDraft(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Create Draft</button>'+
+        '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(orderId)+'&quot;,&quot;'+esc(orderType)+'&quot;,&quot;'+esc(leg)+'&quot;)">Manual</button>';
+
+    return '<div class="auspost-leg-row">'+
+      '<div class="auspost-leg-main"><div class="auspost-leg-name">'+auspostLegLabel(leg)+'</div><div class="auspost-leg-meta">'+meta+'</div></div>'+
+      '<div class="auspost-leg-actions">'+actions+'</div>'+
+    '</div>';
+  }).join('');
+
+  return '<div class="auspost-order-block"><div class="auspost-order-title">AusPost Shipping</div>'+rows+'</div>';
+}
+
+async function loadAuspostShipments(silent) {
+  try {
+    if (!silent) {
+      var body = document.getElementById('auspost-body');
+      if (body) body.innerHTML = '<tr><td colspan="9"><div class="loading"><div class="spinner"></div></div></td></tr>';
+    }
+    const rows = await rpc('admin_get_auspost_shipments');
+    cachedAuspostShipments = Array.isArray(rows) ? rows : [];
+    renderAuspostPanel();
+    if (!silent) {
+      renderOrders(cachedOrders || []);
+      renderShopOrders(cachedShopOrders || []);
+    }
+  } catch(e) {
+    cachedAuspostShipments = [];
+    var body = document.getElementById('auspost-body');
+    if (body) {
+      body.innerHTML = '<tr><td colspan="9"><div class="empty">AusPost shipment records are not connected yet. Run the admin AusPost SQL file, then refresh. Details: '+esc(e.message)+'</div></td></tr>';
+    }
+    if (!silent) setAuspostAdminStatus('err','Could not load AusPost records: ' + e.message);
+  }
+}
+
+function renderAuspostPanel() {
+  var body = document.getElementById('auspost-body');
+  if (!body) return;
+
+  var rows = cachedAuspostShipments || [];
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="9"><div class="empty">No AusPost shipping records yet. Use an order card or the form above to create the first draft record.</div></td></tr>';
+    return;
+  }
+
+  body.innerHTML = rows.map(function(r) {
+    var label = r.label_url ? '<a class="btn tiny" href="'+esc(r.label_url)+'" target="_blank" rel="noopener">Open</a>' : '—';
+    var tracking = r.tracking_number ? esc(r.tracking_number) : '—';
+    return '<tr>'+
+      '<td>'+esc(String(r.order_id || '').substring(0,12))+'</td>'+
+      '<td>'+esc(r.order_type || '—')+'</td>'+
+      '<td>'+auspostLegLabel(r.leg)+'</td>'+
+      '<td><span class="'+auspostStatusClass(r.status)+'">'+auspostStatusLabel(r.status)+'</span></td>'+
+      '<td>'+esc((r.service_profile || 'standard_parcel').replace(/_/g,' '))+'</td>'+
+      '<td>'+tracking+'</td>'+
+      '<td>'+label+'</td>'+
+      '<td>'+fmtDate(r.updated_at || r.created_at)+'</td>'+
+      '<td><div class="beta-row-actions">'+
+        '<button class="btn tiny" onclick="openAuspostEditor(&quot;'+esc(r.order_id)+'&quot;,&quot;'+esc(r.order_type)+'&quot;,&quot;'+esc(r.leg)+'&quot;)">Edit</button>'+
+        '<button class="btn tiny gold" onclick="markAuspostShipment(&quot;'+esc(r.id)+'&quot;,&quot;label_ready&quot;)">Label</button>'+
+        '<button class="btn tiny green" onclick="markAuspostShipment(&quot;'+esc(r.id)+'&quot;,&quot;delivered&quot;)">Delivered</button>'+
+        '<button class="btn tiny red" onclick="deleteAuspostShipment(&quot;'+esc(r.id)+'&quot;)">Delete</button>'+
+      '</div></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function clearAuspostForm() {
+  var defaults = {
+    'auspost-order-type':'marketplace',
+    'auspost-leg':'seller_to_valuna',
+    'auspost-status':'draft',
+    'auspost-service-profile':'standard_parcel'
+  };
+  Object.keys(defaults).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=defaults[id]; });
+  ['auspost-order-id','auspost-tracking-number','auspost-label-url','auspost-internal-note'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  var box = document.getElementById('auspost-admin-status');
+  if (box) box.className = 'notice';
+}
+
+function openAuspostEditor(orderId, orderType, leg) {
+  var tab = Array.from(document.querySelectorAll('.tab')).find(function(t){ return (t.textContent || '').toLowerCase().indexOf('auspost') !== -1; });
+  if (tab) switchTab(tab, 'auspost');
+
+  var rec = findAuspostShipment(orderId, orderType, leg);
+  function val(id,value){ var el=document.getElementById(id); if(el) el.value = value == null ? '' : value; }
+
+  val('auspost-order-id', orderId);
+  val('auspost-order-type', orderType || 'marketplace');
+  val('auspost-leg', leg || 'seller_to_valuna');
+  val('auspost-status', rec ? (rec.status || 'draft') : 'draft');
+  val('auspost-service-profile', rec ? (rec.service_profile || 'standard_parcel') : 'standard_parcel');
+  val('auspost-tracking-number', rec ? rec.tracking_number : '');
+  val('auspost-label-url', rec ? rec.label_url : '');
+  val('auspost-internal-note', rec ? rec.internal_note : '');
+  setAuspostAdminStatus('ok', rec ? 'Loaded existing shipping record for editing.' : 'Prepared new shipping record.');
+}
+
+function getAuspostFormPayload() {
+  var orderId = getInputValue('auspost-order-id');
+  if (!orderId) throw new Error('Order ID is required.');
+  return {
+    p_order_id: orderId,
+    p_order_type: getInputValue('auspost-order-type') || 'marketplace',
+    p_leg: getInputValue('auspost-leg') || 'seller_to_valuna',
+    p_service_profile: getInputValue('auspost-service-profile') || 'standard_parcel',
+    p_tracking_number: getInputValue('auspost-tracking-number') || null,
+    p_label_url: getInputValue('auspost-label-url') || null,
+    p_status: getInputValue('auspost-status') || 'draft',
+    p_internal_note: getInputValue('auspost-internal-note') || null
+  };
+}
+
+async function saveAuspostShipment() {
+  try {
+    var payload = getAuspostFormPayload();
+    setAuspostAdminStatus('ok','Saving AusPost shipping record...');
+    await rpc('admin_upsert_auspost_shipment', payload);
+    setAuspostAdminStatus('ok','Shipping record saved.');
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    setAuspostAdminStatus('err','Could not save shipping record: ' + e.message);
+  }
+}
+
+async function createAuspostDraft(orderId, orderType, leg) {
+  try {
+    await rpc('admin_upsert_auspost_shipment', {
+      p_order_id:String(orderId),
+      p_order_type:orderType || 'marketplace',
+      p_leg:leg || 'seller_to_valuna',
+      p_service_profile:'standard_parcel',
+      p_tracking_number:null,
+      p_label_url:null,
+      p_status:'draft',
+      p_internal_note:'Draft created from admin order card.'
+    });
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    alert('Could not create AusPost draft: ' + e.message);
+  }
+}
+
+async function markAuspostShipment(id, status) {
+  try {
+    if (!id || !status) return;
+    await rpc('admin_update_auspost_shipment_status', { p_id:id, p_status:status });
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    alert('Could not update AusPost status: ' + e.message);
+  }
+}
+
+async function deleteAuspostShipment(id) {
+  if (!confirm('Delete this AusPost shipping record? This does not cancel a real AusPost label.')) return;
+  try {
+    await rpc('admin_delete_auspost_shipment', { p_id:id });
+    await loadAuspostShipments(true);
+    renderOrders(cachedOrders || []);
+    renderShopOrders(cachedShopOrders || []);
+  } catch(e) {
+    alert('Could not delete AusPost record: ' + e.message);
+  }
+}
 
 async function loadProducts() {
   try {
@@ -2108,4 +2569,6 @@ document.addEventListener('change', function(e) {
 <!-- Build: admin-07_SPLIT_MARKETPLACE_AND_SHOP_ORDERS -->
 
 <!-- Build: admin-08_SIGN_OUT_FIX -->
+
+<!-- Build: admin-10_AUSPOST_SYNTAX_FIX_RESTORE_PRODUCTS -->
 </html>
